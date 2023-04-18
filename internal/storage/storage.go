@@ -3,11 +3,11 @@ package storage
 import (
 	"context"
 
-	"github.com/vanyaio/raketa-backend/internal/types"
-	botpb "github.com/vanyaio/raketa-backend/proto"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/pgxpool"
+	"github.com/vanyaio/raketa-backend/internal/types"
+	botpb "github.com/vanyaio/raketa-backend/proto"
 )
 
 type PgxIface interface {
@@ -93,7 +93,7 @@ func (s *Storage) CloseTask(ctx context.Context, req *botpb.CloseRequest) (*type
 		SET status = 'closed'
 		WHERE url = $1
 		RETURNING *`
-	
+
 	task := &types.Task{}
 
 	if err := s.db.QueryRow(ctx, query, req.Url).Scan(&task.URL, &task.UserID, &task.Status); err != nil {
@@ -120,11 +120,18 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*botpb.Task, error) {
 		if err := rows.Scan(&task.URL, &task.UserID, &task.Status); err != nil {
 			return nil, err
 		}
-		// TODO user_id
-		tasks = append(tasks, &botpb.Task{
-			Url:    task.URL,
-			Status: *task.Status,
-		})
+		if task.UserID == nil {
+			tasks = append(tasks, &botpb.Task{
+				Url:    task.URL,
+				Status: *task.Status,
+			})
+		} else {
+			tasks = append(tasks, &botpb.Task{
+				Url:    task.URL,
+				Status: *task.Status,
+				UserId: *task.UserID,
+			})
+		}
 	}
 
 	return tasks, nil

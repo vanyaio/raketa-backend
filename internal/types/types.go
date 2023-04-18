@@ -11,7 +11,7 @@ var (
 )
 
 type Task struct {
-	URL    string `json:"url"`
+	URL    string  `json:"url"`
 	Status *string `json:"status"`
-	UserID *int64 `json:"id"`
+	UserID *int64  `json:"id"`
 }
