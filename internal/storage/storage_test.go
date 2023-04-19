@@ -8,7 +8,7 @@ import (
 	"github.com/pashagolub/pgxmock/v2"
 	"github.com/stretchr/testify/require"
 	"github.com/vanyaio/raketa-backend/internal/types"
-	raketapb "github.com/vanyaio/raketa-backend/proto"
+	proto "github.com/vanyaio/raketa-backend/proto"
 )
 
 func Test_CreateUser(t *testing.T) {
@@ -105,7 +105,7 @@ func Test_AssignWorker(t *testing.T) {
 	defer mock.Close()
 
 
-	req := &raketapb.AssignRequest{
+	req := &proto.AssignRequest{
 		Url:    "qwerty",
 		UserId: 1234,
 	}
@@ -149,7 +149,7 @@ func Test_CloseTask(t *testing.T) {
 	require.NoError(t, err)
 	defer mock.Close()
 
-	req := &raketapb.CloseRequest{
+	req := &proto.CloseRequest{
 		Url: "qwerty",
 	}
 

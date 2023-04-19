@@ -4,20 +4,20 @@ import (
 	"context"
 
 	"github.com/vanyaio/raketa-backend/internal/types"
-	raketapb "github.com/vanyaio/raketa-backend/proto"
+	proto "github.com/vanyaio/raketa-backend/proto"
 )
 
 type IStorage interface {
 	CreateUser(ctx context.Context, user *types.User) (*types.User, error)
 	CreateTask(ctx context.Context, task *types.Task) (*types.Task, error)
 	DeleteTask(ctx context.Context, task *types.Task) error
-	AssignWorker(ctx context.Context, req *raketapb.AssignRequest) (*types.Task, error)
-	CloseTask(ctx context.Context, req *raketapb.CloseRequest) (*types.Task, error)
-	GetOpenTasks(ctx context.Context) ([]*raketapb.Task, error)
+	AssignWorker(ctx context.Context, req *proto.AssignRequest) (*types.Task, error)
+	CloseTask(ctx context.Context, req *proto.CloseRequest) (*types.Task, error)
+	GetOpenTasks(ctx context.Context) ([]*proto.Task, error)
 }
 
 type BotService struct {
-	raketapb.UnimplementedRaketaServiceServer
+	proto.UnimplementedRaketaServiceServer
 	storage IStorage
 }
 
@@ -27,7 +27,7 @@ func NewBotService(storage IStorage) *BotService {
 	}
 }
 
-func (s *BotService) SignUp(ctx context.Context, req *raketapb.RegisterRequest) (*raketapb.RegisterResponse, error) {
+func (s *BotService) SignUp(ctx context.Context, req *proto.RegisterRequest) (*proto.RegisterResponse, error) {
 
 	_, err := s.storage.CreateUser(ctx, &types.User{
 		ID: req.Id,
@@ -36,10 +36,10 @@ func (s *BotService) SignUp(ctx context.Context, req *raketapb.RegisterRequest) 
 		return nil, err
 	}
 
-	return &raketapb.RegisterResponse{}, nil
+	return &proto.RegisterResponse{}, nil
 }
 
-func (s *BotService) CreateTask(ctx context.Context, req *raketapb.CreateRequest) (*raketapb.CreateResponse, error) {
+func (s *BotService) CreateTask(ctx context.Context, req *proto.CreateRequest) (*proto.CreateResponse, error) {
 
 	t := &types.Task{
 		URL:    req.Url,
@@ -51,12 +51,12 @@ func (s *BotService) CreateTask(ctx context.Context, req *raketapb.CreateRequest
 		return nil, err
 	}
 
-	return &raketapb.CreateResponse{
+	return &proto.CreateResponse{
 		Url: task.URL,
 	}, nil
 }
 
-func (s *BotService) DeleteTask(ctx context.Context, req *raketapb.DeleteRequest) (*raketapb.DeleteResponse, error) {
+func (s *BotService) DeleteTask(ctx context.Context, req *proto.DeleteRequest) (*proto.DeleteResponse, error) {
 
 	err := s.storage.DeleteTask(ctx, &types.Task{
 		URL: req.Url,
@@ -65,40 +65,40 @@ func (s *BotService) DeleteTask(ctx context.Context, req *raketapb.DeleteRequest
 		return nil, err
 	}
 
-	return &raketapb.DeleteResponse{
+	return &proto.DeleteResponse{
 		Message: "deleted successfully",
 	}, nil
 }
 
-func (s *BotService) AssignWorker(ctx context.Context, req *raketapb.AssignRequest) (*raketapb.AssignResponse, error) {
+func (s *BotService) AssignWorker(ctx context.Context, req *proto.AssignRequest) (*proto.AssignResponse, error) {
 	task, err := s.storage.AssignWorker(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	return &raketapb.AssignResponse{
+	return &proto.AssignResponse{
 		Message: task.URL,
 	}, nil
 }
 
-func (s *BotService) CloseTask(ctx context.Context, req *raketapb.CloseRequest) (*raketapb.CloseResponse, error) {
+func (s *BotService) CloseTask(ctx context.Context, req *proto.CloseRequest) (*proto.CloseResponse, error) {
 	task, err := s.storage.CloseTask(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	return &raketapb.CloseResponse{
+	return &proto.CloseResponse{
 		Message: *task.Status,
 	}, nil
 }
 
-func (s *BotService) GetOpenTasks(ctx context.Context, req *raketapb.GetRequest) (*raketapb.GetResponse, error) {
+func (s *BotService) GetOpenTasks(ctx context.Context, req *proto.GetRequest) (*proto.GetResponse, error) {
 	tasks, err := s.storage.GetOpenTasks(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &raketapb.GetResponse{
+	return &proto.GetResponse{
 		Tasks: tasks,
 	}, nil
 }
