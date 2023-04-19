@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package raketa;
 
-option go_package = "github.com/Edbeer/raketa-backend/proto;raketapb";
+option go_package = "github.com/vanyaio/raketa-backend/proto;raketapb";
 
 import "google/api/annotations.proto";
 
