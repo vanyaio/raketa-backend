@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"net"
 	"net/http"
@@ -10,16 +11,20 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/vanyaio/raketa-backend/internal/service"
 	"github.com/vanyaio/raketa-backend/internal/storage"
 	"github.com/vanyaio/raketa-backend/pkg/db"
 	proto "github.com/vanyaio/raketa-backend/proto"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	grpcPort := flag.String("gp", ":50052", "grpc server port")
+	restPort := flag.String("rp", ":9090", "rest server port")
+	flag.Parse()
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -38,14 +43,14 @@ func main() {
 
 	// grpc server
 	go func() {
-		if err := runGRPCServer(service); err != nil {
+		if err := runGRPCServer(service, *grpcPort); err != nil {
 			log.Fatal(err)
 		}
 	}()
 
 	// rest server
 	go func() {
-		if err := runRESTServer(service); err != nil {
+		if err := runRESTServer(service, *restPort); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -57,7 +62,7 @@ func main() {
 	<-quit
 }
 
-func runGRPCServer(service *service.BotService) error {
+func runGRPCServer(service *service.BotService, port string) error {
 	server := grpc.NewServer(grpc.MaxConcurrentStreams(1000))
 
 	proto.RegisterRaketaServiceServer(server, service)
@@ -65,7 +70,7 @@ func runGRPCServer(service *service.BotService) error {
 	// reflection
 	reflection.Register(server)
 	// listen on port :50052
-	lis, err := net.Listen("tcp", ":50052")
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -77,7 +82,7 @@ func runGRPCServer(service *service.BotService) error {
 	return nil
 }
 
-func runRESTServer(service *service.BotService) error {
+func runRESTServer(service *service.BotService, port string) error {
 	mux := runtime.NewServeMux()
 
 	err := proto.RegisterRaketaServiceHandlerServer(context.Background(), mux, service)
@@ -86,7 +91,7 @@ func runRESTServer(service *service.BotService) error {
 	}
 
 	log.Println("rest server start")
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := http.ListenAndServe(port, mux); err != nil {
 		log.Fatal(err)
 	}
 

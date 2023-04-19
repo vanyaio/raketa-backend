@@ -2,7 +2,10 @@ build:
 	@go build -o ./bin/api
 
 run: build
-	@./bin/api
+	@./bin/api 
+
+run-ports:
+	go run main.go -gp=$(gp) -rp=$(rp)
 
 postgres-up:
 	docker run --name raketadb \
