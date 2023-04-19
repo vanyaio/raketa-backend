@@ -13,7 +13,7 @@ import (
 	"github.com/vanyaio/raketa-backend/internal/service"
 	"github.com/vanyaio/raketa-backend/internal/storage"
 	"github.com/vanyaio/raketa-backend/pkg/db"
-	botpb "github.com/vanyaio/raketa-backend/proto"
+	raketapb "github.com/vanyaio/raketa-backend/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -60,7 +60,7 @@ func main() {
 func runGRPCServer(service *service.BotService) error {
 	server := grpc.NewServer(grpc.MaxConcurrentStreams(1000))
 
-	botpb.RegisterBotServiceServer(server, service)
+	raketapb.RegisterRaketaServiceServer(server, service)
 
 	// reflection
 	reflection.Register(server)
@@ -80,7 +80,7 @@ func runGRPCServer(service *service.BotService) error {
 func runRESTServer(service *service.BotService) error {
 	mux := runtime.NewServeMux()
 
-	err := botpb.RegisterBotServiceHandlerServer(context.Background(), mux, service)
+	err := raketapb.RegisterRaketaServiceHandlerServer(context.Background(), mux, service)
 	if err != nil {
 		log.Fatal(err)
 	}

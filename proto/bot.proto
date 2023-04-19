@@ -6,7 +6,7 @@ option go_package = "github.com/Edbeer/bot/proto;botpb";
 
 import "google/api/annotations.proto";
 
-service BotService {
+service RaketaService {
     // SignUp user
     rpc SignUp(RegisterRequest) returns (RegisterResponse) {
         option (google.api.http) = {

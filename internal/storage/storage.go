@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vanyaio/raketa-backend/internal/types"
-	botpb "github.com/vanyaio/raketa-backend/proto"
+	raketapb "github.com/vanyaio/raketa-backend/proto"
 )
 
 type PgxIface interface {
@@ -69,7 +69,7 @@ func (s *Storage) DeleteTask(ctx context.Context, task *types.Task) error {
 	return nil
 }
 
-func (s *Storage) AssignWorker(ctx context.Context, req *botpb.AssignRequest) (*types.Task, error) {
+func (s *Storage) AssignWorker(ctx context.Context, req *raketapb.AssignRequest) (*types.Task, error) {
 	ctx = context.TODO()
 
 	query := `UPDATE tasks
@@ -86,7 +86,7 @@ func (s *Storage) AssignWorker(ctx context.Context, req *botpb.AssignRequest) (*
 	return task, nil
 }
 
-func (s *Storage) CloseTask(ctx context.Context, req *botpb.CloseRequest) (*types.Task, error) {
+func (s *Storage) CloseTask(ctx context.Context, req *raketapb.CloseRequest) (*types.Task, error) {
 	ctx = context.TODO()
 
 	query := `UPDATE tasks
@@ -103,7 +103,7 @@ func (s *Storage) CloseTask(ctx context.Context, req *botpb.CloseRequest) (*type
 	return task, nil
 }
 
-func (s *Storage) GetOpenTasks(ctx context.Context) ([]*botpb.Task, error) {
+func (s *Storage) GetOpenTasks(ctx context.Context) ([]*raketapb.Task, error) {
 	ctx = context.TODO()
 
 	query := `SELECT * FROM tasks WHERE status = 'open'`
@@ -113,7 +113,7 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*botpb.Task, error) {
 		return nil, err
 	}
 
-	tasks := []*botpb.Task{}
+	tasks := []*raketapb.Task{}
 
 	for rows.Next() {
 		task := &types.Task{}
@@ -121,12 +121,12 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*botpb.Task, error) {
 			return nil, err
 		}
 		if task.UserID == nil {
-			tasks = append(tasks, &botpb.Task{
+			tasks = append(tasks, &raketapb.Task{
 				Url:    task.URL,
 				Status: *task.Status,
 			})
 		} else {
-			tasks = append(tasks, &botpb.Task{
+			tasks = append(tasks, &raketapb.Task{
 				Url:    task.URL,
 				Status: *task.Status,
 				UserId: *task.UserID,

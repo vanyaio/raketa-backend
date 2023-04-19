@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_BotService_SignUp_0(ctx context.Context, marshaler runtime.Marshaler, client BotServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RaketaService_SignUp_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RegisterRequest
 	var metadata runtime.ServerMetadata
 
@@ -48,7 +48,7 @@ func request_BotService_SignUp_0(ctx context.Context, marshaler runtime.Marshale
 
 }
 
-func local_request_BotService_SignUp_0(ctx context.Context, marshaler runtime.Marshaler, server BotServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RaketaService_SignUp_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq RegisterRequest
 	var metadata runtime.ServerMetadata
 
@@ -65,7 +65,7 @@ func local_request_BotService_SignUp_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func request_BotService_CreateTask_0(ctx context.Context, marshaler runtime.Marshaler, client BotServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RaketaService_CreateTask_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq CreateRequest
 	var metadata runtime.ServerMetadata
 
@@ -82,7 +82,7 @@ func request_BotService_CreateTask_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_BotService_CreateTask_0(ctx context.Context, marshaler runtime.Marshaler, server BotServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RaketaService_CreateTask_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq CreateRequest
 	var metadata runtime.ServerMetadata
 
@@ -100,17 +100,17 @@ func local_request_BotService_CreateTask_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_BotService_DeleteTask_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_RaketaService_DeleteTask_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_BotService_DeleteTask_0(ctx context.Context, marshaler runtime.Marshaler, client BotServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RaketaService_DeleteTask_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DeleteRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BotService_DeleteTask_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RaketaService_DeleteTask_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -119,14 +119,14 @@ func request_BotService_DeleteTask_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
-func local_request_BotService_DeleteTask_0(ctx context.Context, marshaler runtime.Marshaler, server BotServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RaketaService_DeleteTask_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DeleteRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_BotService_DeleteTask_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RaketaService_DeleteTask_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -135,7 +135,7 @@ func local_request_BotService_DeleteTask_0(ctx context.Context, marshaler runtim
 
 }
 
-func request_BotService_AssignWorker_0(ctx context.Context, marshaler runtime.Marshaler, client BotServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RaketaService_AssignWorker_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq AssignRequest
 	var metadata runtime.ServerMetadata
 
@@ -152,7 +152,7 @@ func request_BotService_AssignWorker_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_BotService_AssignWorker_0(ctx context.Context, marshaler runtime.Marshaler, server BotServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RaketaService_AssignWorker_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq AssignRequest
 	var metadata runtime.ServerMetadata
 
@@ -169,7 +169,7 @@ func local_request_BotService_AssignWorker_0(ctx context.Context, marshaler runt
 
 }
 
-func request_BotService_CloseTask_0(ctx context.Context, marshaler runtime.Marshaler, client BotServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RaketaService_CloseTask_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq CloseRequest
 	var metadata runtime.ServerMetadata
 
@@ -186,7 +186,7 @@ func request_BotService_CloseTask_0(ctx context.Context, marshaler runtime.Marsh
 
 }
 
-func local_request_BotService_CloseTask_0(ctx context.Context, marshaler runtime.Marshaler, server BotServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RaketaService_CloseTask_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq CloseRequest
 	var metadata runtime.ServerMetadata
 
@@ -203,7 +203,7 @@ func local_request_BotService_CloseTask_0(ctx context.Context, marshaler runtime
 
 }
 
-func request_BotService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Marshaler, client BotServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RaketaService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetRequest
 	var metadata runtime.ServerMetadata
 
@@ -212,7 +212,7 @@ func request_BotService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Ma
 
 }
 
-func local_request_BotService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Marshaler, server BotServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RaketaService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetRequest
 	var metadata runtime.ServerMetadata
 
@@ -221,13 +221,13 @@ func local_request_BotService_GetOpenTasks_0(ctx context.Context, marshaler runt
 
 }
 
-// RegisterBotServiceHandlerServer registers the http handlers for service BotService to "mux".
-// UnaryRPC     :call BotServiceServer directly.
+// RegisterRaketaServiceHandlerServer registers the http handlers for service RaketaService to "mux".
+// UnaryRPC     :call RaketaServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterBotServiceHandlerFromEndpoint instead.
-func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server BotServiceServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRaketaServiceHandlerFromEndpoint instead.
+func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RaketaServiceServer) error {
 
-	mux.Handle("POST", pattern_BotService_SignUp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_RaketaService_SignUp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -235,12 +235,12 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.BotService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BotService_SignUp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_SignUp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -248,11 +248,11 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_BotService_SignUp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_SignUp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_BotService_CreateTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_RaketaService_CreateTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -260,12 +260,12 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.BotService/CreateTask", runtime.WithHTTPPathPattern("/create"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/CreateTask", runtime.WithHTTPPathPattern("/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BotService_CreateTask_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_CreateTask_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -273,11 +273,11 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_BotService_CreateTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_CreateTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_BotService_DeleteTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_RaketaService_DeleteTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -285,12 +285,12 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.BotService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BotService_DeleteTask_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_DeleteTask_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -298,11 +298,11 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_BotService_DeleteTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_DeleteTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_BotService_AssignWorker_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_RaketaService_AssignWorker_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -310,12 +310,12 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.BotService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BotService_AssignWorker_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_AssignWorker_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -323,11 +323,11 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_BotService_AssignWorker_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_AssignWorker_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_BotService_CloseTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_RaketaService_CloseTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -335,12 +335,12 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.BotService/CloseTask", runtime.WithHTTPPathPattern("/close"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/CloseTask", runtime.WithHTTPPathPattern("/close"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BotService_CloseTask_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_CloseTask_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -348,11 +348,11 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_BotService_CloseTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_CloseTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_BotService_GetOpenTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RaketaService_GetOpenTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -360,12 +360,12 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.BotService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BotService_GetOpenTasks_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_GetOpenTasks_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -373,16 +373,16 @@ func RegisterBotServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_BotService_GetOpenTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_GetOpenTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterBotServiceHandlerFromEndpoint is same as RegisterBotServiceHandler but
+// RegisterRaketaServiceHandlerFromEndpoint is same as RegisterRaketaServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterBotServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterRaketaServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.DialContext(ctx, endpoint, opts...)
 	if err != nil {
 		return err
@@ -402,151 +402,151 @@ func RegisterBotServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.Ser
 		}()
 	}()
 
-	return RegisterBotServiceHandler(ctx, mux, conn)
+	return RegisterRaketaServiceHandler(ctx, mux, conn)
 }
 
-// RegisterBotServiceHandler registers the http handlers for service BotService to "mux".
+// RegisterRaketaServiceHandler registers the http handlers for service RaketaService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterBotServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterBotServiceHandlerClient(ctx, mux, NewBotServiceClient(conn))
+func RegisterRaketaServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterRaketaServiceHandlerClient(ctx, mux, NewRaketaServiceClient(conn))
 }
 
-// RegisterBotServiceHandlerClient registers the http handlers for service BotService
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "BotServiceClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "BotServiceClient"
+// RegisterRaketaServiceHandlerClient registers the http handlers for service RaketaService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RaketaServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RaketaServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "BotServiceClient" to call the correct interceptors.
-func RegisterBotServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client BotServiceClient) error {
+// "RaketaServiceClient" to call the correct interceptors.
+func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RaketaServiceClient) error {
 
-	mux.Handle("POST", pattern_BotService_SignUp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_RaketaService_SignUp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.BotService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BotService_SignUp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_SignUp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_BotService_SignUp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_SignUp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_BotService_CreateTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_RaketaService_CreateTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.BotService/CreateTask", runtime.WithHTTPPathPattern("/create"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/CreateTask", runtime.WithHTTPPathPattern("/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BotService_CreateTask_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_CreateTask_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_BotService_CreateTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_CreateTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_BotService_DeleteTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_RaketaService_DeleteTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.BotService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BotService_DeleteTask_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_DeleteTask_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_BotService_DeleteTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_DeleteTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_BotService_AssignWorker_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_RaketaService_AssignWorker_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.BotService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BotService_AssignWorker_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_AssignWorker_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_BotService_AssignWorker_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_AssignWorker_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_BotService_CloseTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_RaketaService_CloseTask_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.BotService/CloseTask", runtime.WithHTTPPathPattern("/close"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/CloseTask", runtime.WithHTTPPathPattern("/close"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BotService_CloseTask_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_CloseTask_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_BotService_CloseTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_CloseTask_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_BotService_GetOpenTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RaketaService_GetOpenTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.BotService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BotService_GetOpenTasks_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_GetOpenTasks_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_BotService_GetOpenTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_GetOpenTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -554,29 +554,29 @@ func RegisterBotServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_BotService_SignUp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"sign-up"}, ""))
+	pattern_RaketaService_SignUp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"sign-up"}, ""))
 
-	pattern_BotService_CreateTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"create"}, ""))
+	pattern_RaketaService_CreateTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"create"}, ""))
 
-	pattern_BotService_DeleteTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"delete"}, ""))
+	pattern_RaketaService_DeleteTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"delete"}, ""))
 
-	pattern_BotService_AssignWorker_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"assign"}, ""))
+	pattern_RaketaService_AssignWorker_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"assign"}, ""))
 
-	pattern_BotService_CloseTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"close"}, ""))
+	pattern_RaketaService_CloseTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"close"}, ""))
 
-	pattern_BotService_GetOpenTasks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"tasks"}, ""))
+	pattern_RaketaService_GetOpenTasks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"tasks"}, ""))
 )
 
 var (
-	forward_BotService_SignUp_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_SignUp_0 = runtime.ForwardResponseMessage
 
-	forward_BotService_CreateTask_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_CreateTask_0 = runtime.ForwardResponseMessage
 
-	forward_BotService_DeleteTask_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_DeleteTask_0 = runtime.ForwardResponseMessage
 
-	forward_BotService_AssignWorker_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_AssignWorker_0 = runtime.ForwardResponseMessage
 
-	forward_BotService_CloseTask_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_CloseTask_0 = runtime.ForwardResponseMessage
 
-	forward_BotService_GetOpenTasks_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_GetOpenTasks_0 = runtime.ForwardResponseMessage
 )
