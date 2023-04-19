@@ -4,7 +4,7 @@
 // - protoc             v3.21.6
 // source: bot.proto
 
-package botpb
+package raketapb
 
 import (
 	context "context"
@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RaketaService_SignUp_FullMethodName       = "/bot.RaketaService/SignUp"
-	RaketaService_CreateTask_FullMethodName   = "/bot.RaketaService/CreateTask"
-	RaketaService_DeleteTask_FullMethodName   = "/bot.RaketaService/DeleteTask"
-	RaketaService_AssignWorker_FullMethodName = "/bot.RaketaService/AssignWorker"
-	RaketaService_CloseTask_FullMethodName    = "/bot.RaketaService/CloseTask"
-	RaketaService_GetOpenTasks_FullMethodName = "/bot.RaketaService/GetOpenTasks"
+	RaketaService_SignUp_FullMethodName       = "/raketa.RaketaService/SignUp"
+	RaketaService_CreateTask_FullMethodName   = "/raketa.RaketaService/CreateTask"
+	RaketaService_DeleteTask_FullMethodName   = "/raketa.RaketaService/DeleteTask"
+	RaketaService_AssignWorker_FullMethodName = "/raketa.RaketaService/AssignWorker"
+	RaketaService_CloseTask_FullMethodName    = "/raketa.RaketaService/CloseTask"
+	RaketaService_GetOpenTasks_FullMethodName = "/raketa.RaketaService/GetOpenTasks"
 )
 
 // RaketaServiceClient is the client API for RaketaService service.
@@ -263,7 +263,7 @@ func _RaketaService_GetOpenTasks_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RaketaService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "bot.RaketaService",
+	ServiceName: "raketa.RaketaService",
 	HandlerType: (*RaketaServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -2,11 +2,11 @@
 // source: bot.proto
 
 /*
-Package botpb is a reverse proxy.
+Package raketapb is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package botpb
+package raketapb
 
 import (
 	"context"
@@ -235,7 +235,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -260,7 +260,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/CreateTask", runtime.WithHTTPPathPattern("/create"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/CreateTask", runtime.WithHTTPPathPattern("/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -285,7 +285,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -310,7 +310,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -335,7 +335,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/CloseTask", runtime.WithHTTPPathPattern("/close"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/CloseTask", runtime.WithHTTPPathPattern("/close"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -360,7 +360,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/bot.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -424,7 +424,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/SignUp", runtime.WithHTTPPathPattern("/sign-up"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -446,7 +446,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/CreateTask", runtime.WithHTTPPathPattern("/create"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/CreateTask", runtime.WithHTTPPathPattern("/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -468,7 +468,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/DeleteTask", runtime.WithHTTPPathPattern("/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -490,7 +490,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/AssignWorker", runtime.WithHTTPPathPattern("/assign"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -512,7 +512,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/CloseTask", runtime.WithHTTPPathPattern("/close"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/CloseTask", runtime.WithHTTPPathPattern("/close"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -534,7 +534,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/bot.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

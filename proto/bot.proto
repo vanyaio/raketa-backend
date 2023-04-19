@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package bot;
+package raketa;
 
-option go_package = "github.com/Edbeer/bot/proto;botpb";
+option go_package = "github.com/Edbeer/raketa-backend/proto;raketapb";
 
 import "google/api/annotations.proto";
 
