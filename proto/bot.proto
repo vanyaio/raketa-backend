@@ -7,103 +7,86 @@ option go_package = "github.com/vanyaio/raketa-backend/proto;raketapb";
 import "google/api/annotations.proto";
 
 service RaketaService {
-    // SignUp user
-    rpc SignUp(RegisterRequest) returns (RegisterResponse) {
+    rpc SignUp(SignUpRequest) returns (SignUpResponse) {
         option (google.api.http) = {
-            post: "/sign-up"
+            post: "/users/sign-up"
             body: "*"
         };
     };
-    rpc CreateTask(CreateRequest) returns (CreateResponse) {
+    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {
         option (google.api.http) = {
-            post: "/create"
+            post: "/tasks/create"
             body: "*"
         };
     };
-    rpc DeleteTask(DeleteRequest) returns (DeleteResponse) {
+    rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse) {
         option (google.api.http) = {
-            delete: "/delete"
+            delete: "/tasks/delete"
         };
     };
-    rpc AssignWorker(AssignRequest) returns (AssignResponse) {
+    rpc AssignUser(AssignUserRequest) returns (AssignUserResponse) {
         option (google.api.http) = {
-            patch: "/assign"
+            patch: "/users/assign"
             body: "*"
         };
     };
-    rpc CloseTask(CloseRequest) returns (CloseResponse) {
+    rpc CloseTask(CloseTaskRequest) returns (CloseTaskResponse) {
         option (google.api.http) = {
-            patch: "/close"
+            patch: "/tasks/close"
             body: "*"
         };
     };
-    rpc GetOpenTasks(GetRequest) returns (GetResponse) {
+    rpc GetOpenTasks(GetOpenTasksRequest) returns (GetOpenTasksResponse) {
         option (google.api.http) = {
             get: "/tasks"
         };
     };
 }
 
-// SignUp request
-message RegisterRequest {
+message SignUpRequest{
     int64 id = 1;
 }
-// SignUp response
-message RegisterResponse {}
 
-// CreateTask request
-message CreateRequest {
-    string url = 1;
-}
-// CreateTask response
-message CreateResponse {
+message SignUpResponse {}
+
+message CreateTaskRequest {
     string url = 1;
 }
 
-// DeleteTask request
-message DeleteRequest {
+message CreateTaskResponse {}
+
+message DeleteTaskRequest {
     string url = 1;
 }
-// DeleteTask response
-message DeleteResponse {
-    string message = 1;
-}
 
-// AssignWorker request
-message AssignRequest {
+message DeleteTaskResponse {}
+
+message AssignUserRequest {
     string url = 1;
     int64 user_id = 2;
 }
-// AssignWorker response
-message AssignResponse {
-    string message = 1;
-}
 
-// CloseTask request
-message CloseRequest {
+message AssignUserResponse {}
+
+message CloseTaskRequest {
     string url = 1;
 }
-// CloseTask response
-message CloseResponse {
-    string message = 1;
-}
 
-// GetOpenTasks request
-message GetRequest {}
-// GetOpenTasks response
-message GetResponse {
+message CloseTaskResponse {}
+
+message GetOpenTasksRequest {}
+
+message GetOpenTasksResponse {
     repeated Task tasks = 1;
 }
 
 message Task {
-
-    // enum Status {
-    //     OPEN = 0;
-    //     CLOSED = 1;
-    //     DECLINED = 2;
-    // }
-
+    enum Status {
+        OPEN = 0;
+        CLOSED = 1;
+        DECLINED = 2;
+    }
     string url = 1;
     int64 user_id = 2;
-    string status = 3;
+    Status status = 3;
 }

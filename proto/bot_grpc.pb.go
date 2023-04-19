@@ -22,7 +22,7 @@ const (
 	RaketaService_SignUp_FullMethodName       = "/raketa.RaketaService/SignUp"
 	RaketaService_CreateTask_FullMethodName   = "/raketa.RaketaService/CreateTask"
 	RaketaService_DeleteTask_FullMethodName   = "/raketa.RaketaService/DeleteTask"
-	RaketaService_AssignWorker_FullMethodName = "/raketa.RaketaService/AssignWorker"
+	RaketaService_AssignUser_FullMethodName   = "/raketa.RaketaService/AssignUser"
 	RaketaService_CloseTask_FullMethodName    = "/raketa.RaketaService/CloseTask"
 	RaketaService_GetOpenTasks_FullMethodName = "/raketa.RaketaService/GetOpenTasks"
 )
@@ -31,13 +31,12 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RaketaServiceClient interface {
-	// SignUp user
-	SignUp(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	CreateTask(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
-	DeleteTask(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
-	AssignWorker(ctx context.Context, in *AssignRequest, opts ...grpc.CallOption) (*AssignResponse, error)
-	CloseTask(ctx context.Context, in *CloseRequest, opts ...grpc.CallOption) (*CloseResponse, error)
-	GetOpenTasks(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
+	CreateTask(ctx context.Context, in *CreateTaskRequest, opts ...grpc.CallOption) (*CreateTaskResponse, error)
+	DeleteTask(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteTaskResponse, error)
+	AssignUser(ctx context.Context, in *AssignUserRequest, opts ...grpc.CallOption) (*AssignUserResponse, error)
+	CloseTask(ctx context.Context, in *CloseTaskRequest, opts ...grpc.CallOption) (*CloseTaskResponse, error)
+	GetOpenTasks(ctx context.Context, in *GetOpenTasksRequest, opts ...grpc.CallOption) (*GetOpenTasksResponse, error)
 }
 
 type raketaServiceClient struct {
@@ -48,8 +47,8 @@ func NewRaketaServiceClient(cc grpc.ClientConnInterface) RaketaServiceClient {
 	return &raketaServiceClient{cc}
 }
 
-func (c *raketaServiceClient) SignUp(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
-	out := new(RegisterResponse)
+func (c *raketaServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error) {
+	out := new(SignUpResponse)
 	err := c.cc.Invoke(ctx, RaketaService_SignUp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,8 +56,8 @@ func (c *raketaServiceClient) SignUp(ctx context.Context, in *RegisterRequest, o
 	return out, nil
 }
 
-func (c *raketaServiceClient) CreateTask(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
+func (c *raketaServiceClient) CreateTask(ctx context.Context, in *CreateTaskRequest, opts ...grpc.CallOption) (*CreateTaskResponse, error) {
+	out := new(CreateTaskResponse)
 	err := c.cc.Invoke(ctx, RaketaService_CreateTask_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -66,8 +65,8 @@ func (c *raketaServiceClient) CreateTask(ctx context.Context, in *CreateRequest,
 	return out, nil
 }
 
-func (c *raketaServiceClient) DeleteTask(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
-	out := new(DeleteResponse)
+func (c *raketaServiceClient) DeleteTask(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteTaskResponse, error) {
+	out := new(DeleteTaskResponse)
 	err := c.cc.Invoke(ctx, RaketaService_DeleteTask_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -75,17 +74,17 @@ func (c *raketaServiceClient) DeleteTask(ctx context.Context, in *DeleteRequest,
 	return out, nil
 }
 
-func (c *raketaServiceClient) AssignWorker(ctx context.Context, in *AssignRequest, opts ...grpc.CallOption) (*AssignResponse, error) {
-	out := new(AssignResponse)
-	err := c.cc.Invoke(ctx, RaketaService_AssignWorker_FullMethodName, in, out, opts...)
+func (c *raketaServiceClient) AssignUser(ctx context.Context, in *AssignUserRequest, opts ...grpc.CallOption) (*AssignUserResponse, error) {
+	out := new(AssignUserResponse)
+	err := c.cc.Invoke(ctx, RaketaService_AssignUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *raketaServiceClient) CloseTask(ctx context.Context, in *CloseRequest, opts ...grpc.CallOption) (*CloseResponse, error) {
-	out := new(CloseResponse)
+func (c *raketaServiceClient) CloseTask(ctx context.Context, in *CloseTaskRequest, opts ...grpc.CallOption) (*CloseTaskResponse, error) {
+	out := new(CloseTaskResponse)
 	err := c.cc.Invoke(ctx, RaketaService_CloseTask_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -93,8 +92,8 @@ func (c *raketaServiceClient) CloseTask(ctx context.Context, in *CloseRequest, o
 	return out, nil
 }
 
-func (c *raketaServiceClient) GetOpenTasks(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
-	out := new(GetResponse)
+func (c *raketaServiceClient) GetOpenTasks(ctx context.Context, in *GetOpenTasksRequest, opts ...grpc.CallOption) (*GetOpenTasksResponse, error) {
+	out := new(GetOpenTasksResponse)
 	err := c.cc.Invoke(ctx, RaketaService_GetOpenTasks_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -106,13 +105,12 @@ func (c *raketaServiceClient) GetOpenTasks(ctx context.Context, in *GetRequest, 
 // All implementations must embed UnimplementedRaketaServiceServer
 // for forward compatibility
 type RaketaServiceServer interface {
-	// SignUp user
-	SignUp(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	CreateTask(context.Context, *CreateRequest) (*CreateResponse, error)
-	DeleteTask(context.Context, *DeleteRequest) (*DeleteResponse, error)
-	AssignWorker(context.Context, *AssignRequest) (*AssignResponse, error)
-	CloseTask(context.Context, *CloseRequest) (*CloseResponse, error)
-	GetOpenTasks(context.Context, *GetRequest) (*GetResponse, error)
+	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
+	CreateTask(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error)
+	DeleteTask(context.Context, *DeleteTaskRequest) (*DeleteTaskResponse, error)
+	AssignUser(context.Context, *AssignUserRequest) (*AssignUserResponse, error)
+	CloseTask(context.Context, *CloseTaskRequest) (*CloseTaskResponse, error)
+	GetOpenTasks(context.Context, *GetOpenTasksRequest) (*GetOpenTasksResponse, error)
 	mustEmbedUnimplementedRaketaServiceServer()
 }
 
@@ -120,22 +118,22 @@ type RaketaServiceServer interface {
 type UnimplementedRaketaServiceServer struct {
 }
 
-func (UnimplementedRaketaServiceServer) SignUp(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+func (UnimplementedRaketaServiceServer) SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
-func (UnimplementedRaketaServiceServer) CreateTask(context.Context, *CreateRequest) (*CreateResponse, error) {
+func (UnimplementedRaketaServiceServer) CreateTask(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTask not implemented")
 }
-func (UnimplementedRaketaServiceServer) DeleteTask(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+func (UnimplementedRaketaServiceServer) DeleteTask(context.Context, *DeleteTaskRequest) (*DeleteTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTask not implemented")
 }
-func (UnimplementedRaketaServiceServer) AssignWorker(context.Context, *AssignRequest) (*AssignResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AssignWorker not implemented")
+func (UnimplementedRaketaServiceServer) AssignUser(context.Context, *AssignUserRequest) (*AssignUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AssignUser not implemented")
 }
-func (UnimplementedRaketaServiceServer) CloseTask(context.Context, *CloseRequest) (*CloseResponse, error) {
+func (UnimplementedRaketaServiceServer) CloseTask(context.Context, *CloseTaskRequest) (*CloseTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CloseTask not implemented")
 }
-func (UnimplementedRaketaServiceServer) GetOpenTasks(context.Context, *GetRequest) (*GetResponse, error) {
+func (UnimplementedRaketaServiceServer) GetOpenTasks(context.Context, *GetOpenTasksRequest) (*GetOpenTasksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOpenTasks not implemented")
 }
 func (UnimplementedRaketaServiceServer) mustEmbedUnimplementedRaketaServiceServer() {}
@@ -152,7 +150,7 @@ func RegisterRaketaServiceServer(s grpc.ServiceRegistrar, srv RaketaServiceServe
 }
 
 func _RaketaService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+	in := new(SignUpRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -164,13 +162,13 @@ func _RaketaService_SignUp_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: RaketaService_SignUp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).SignUp(ctx, req.(*RegisterRequest))
+		return srv.(RaketaServiceServer).SignUp(ctx, req.(*SignUpRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RaketaService_CreateTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
+	in := new(CreateTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -182,13 +180,13 @@ func _RaketaService_CreateTask_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: RaketaService_CreateTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).CreateTask(ctx, req.(*CreateRequest))
+		return srv.(RaketaServiceServer).CreateTask(ctx, req.(*CreateTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RaketaService_DeleteTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRequest)
+	in := new(DeleteTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -200,31 +198,31 @@ func _RaketaService_DeleteTask_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: RaketaService_DeleteTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).DeleteTask(ctx, req.(*DeleteRequest))
+		return srv.(RaketaServiceServer).DeleteTask(ctx, req.(*DeleteTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RaketaService_AssignWorker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AssignRequest)
+func _RaketaService_AssignUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RaketaServiceServer).AssignWorker(ctx, in)
+		return srv.(RaketaServiceServer).AssignUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RaketaService_AssignWorker_FullMethodName,
+		FullMethod: RaketaService_AssignUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).AssignWorker(ctx, req.(*AssignRequest))
+		return srv.(RaketaServiceServer).AssignUser(ctx, req.(*AssignUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RaketaService_CloseTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CloseRequest)
+	in := new(CloseTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -236,13 +234,13 @@ func _RaketaService_CloseTask_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: RaketaService_CloseTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).CloseTask(ctx, req.(*CloseRequest))
+		return srv.(RaketaServiceServer).CloseTask(ctx, req.(*CloseTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RaketaService_GetOpenTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRequest)
+	in := new(GetOpenTasksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -254,7 +252,7 @@ func _RaketaService_GetOpenTasks_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: RaketaService_GetOpenTasks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).GetOpenTasks(ctx, req.(*GetRequest))
+		return srv.(RaketaServiceServer).GetOpenTasks(ctx, req.(*GetOpenTasksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -279,8 +277,8 @@ var RaketaService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RaketaService_DeleteTask_Handler,
 		},
 		{
-			MethodName: "AssignWorker",
-			Handler:    _RaketaService_AssignWorker_Handler,
+			MethodName: "AssignUser",
+			Handler:    _RaketaService_AssignUser_Handler,
 		},
 		{
 			MethodName: "CloseTask",

@@ -4,7 +4,7 @@ build:
 run: build
 	@./bin/api
 
-docker:
+postgres-up:
 	docker run --name raketadb \
 	-e POSTGRES_HOST=localhost \
 	-e POSTGRES_PASSWORD=postgres \
@@ -12,11 +12,17 @@ docker:
 	-e POSTGRES_DB=raketadb \
 	-p 5432:5432 -d postgres
 
-docker-start:
+postgres-start:
 	docker start raketadb
 
-docker-exec: docker-start
+postgres-run: postgres-start
 	docker exec -it raketadb psql -U postgres raketadb
+
+postgres-stop:
+	docker stop raketadb
+
+postgres-del: postgres-stop
+	docker rm raketadb
 
 protob:
 	@protoc -I ./proto --go_out=./proto --go_opt=paths=source_relative \

@@ -4,14 +4,25 @@ type User struct {
 	ID int64 `json:"id"`
 }
 
+type Status string
+
 var (
-	Open     string = "open"
+	Open     Status = "open"
 	Closed          = "closed"
 	Declined        = "declined"
 )
 
 type Task struct {
-	URL    string  `json:"url"`
-	Status *string `json:"status"`
+	Url    string  `json:"url"`
+	Status Status `json:"status"`
 	UserID *int64  `json:"id"`
+}
+
+type AssignUserRequest struct {
+	Url    string  `json:"url"`
+	UserID *int64  `json:"id"`
+}
+
+type CloseTaskRequest struct {
+	Url    string  `json:"url"`
 }
