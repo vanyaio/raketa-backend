@@ -51,10 +51,9 @@ func (s *BotService) CreateTask(ctx context.Context, req *proto.CreateTaskReques
 }
 
 func (s *BotService) DeleteTask(ctx context.Context, req *proto.DeleteTaskRequest) (*proto.DeleteTaskResponse, error) {
-	err := s.storage.DeleteTask(ctx, &types.Task{
+	if err := s.storage.DeleteTask(ctx, &types.Task{
 		Url: req.Url,
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
