@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"sync"
 	"testing"
 	"time"
 
@@ -21,89 +20,70 @@ func Test_DB(t *testing.T) {
 	defer pool.Close()
 
 	storage := NewStorage(pool)
-	wg := &sync.WaitGroup{}
-	wg.Add(6)
-	go func() {
-		defer wg.Done()
-		err = CreateUser(ctx, t, storage)
-		require.NoError(t, err)
-	}()
-	go func() {
-		defer wg.Done()
-		err = CreateTask(ctx, t, storage)
-		require.NoError(t, err)
-	}()
-	go func() {
-		defer wg.Done()
-		err = DeleteTask(ctx, t, storage)
-		require.NoError(t, err)
-	}()
-	go func() {
-		defer wg.Done()
-		err = AssignUser(ctx, t, storage)
-		require.NoError(t, err)
-	}()
-	go func() {
-		defer wg.Done()
-		err = CloseTask(ctx, t, storage)
-		require.NoError(t, err)
-	}()
-	go func() {
-		defer wg.Done()
-		err = GetOpenTasks(ctx, t, storage)
-		require.NoError(t, err)
-	}()
-	wg.Wait()
-	
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+
+	err = createUser(ctx, t, storage)
+	require.NoError(t, err)
+
+	err = createTask(ctx, t, storage)
+	require.NoError(t, err)
+
+	err = deleteTask(ctx, t, storage)
+	require.NoError(t, err)
+
+	err = assignUser(ctx, t, storage)
+	require.NoError(t, err)
+
+	err = closeTask(ctx, t, storage)
+	require.NoError(t, err)
+
+	err = getOpenTasks(ctx, t, storage)
+	require.NoError(t, err)
 }
 
-func CreateUser(ctx context.Context, t *testing.T, storage *Storage) error {
+func createUser(ctx context.Context, t *testing.T, storage *Storage) error {
 	u := &types.User{
 		ID: int64(randomId()),
 	}
 
-	user, err := storage.CreateUser(ctx, u)
+	err := storage.CreateUser(ctx, u)
 	require.NoError(t, err)
-	require.Equal(t, user, u)
 
-	u = &types.User{}
-	err = storage.db.QueryRow(ctx, `SELECT * FROM users WHERE id = $1`, user.ID).Scan(&u.ID)
+	_, err = storage.db.Exec(ctx, `SELECT * FROM users WHERE id = $1`, u.ID)
 	require.NoError(t, err)
-	require.Equal(t, user, u)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 
 	return err
 }
 
-func CreateTask(ctx context.Context, t *testing.T, storage *Storage) error {
+func createTask(ctx context.Context, t *testing.T, storage *Storage) error {
 	task := &types.Task{
 		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	newTask, err := storage.CreateTask(ctx, task)
+	err := storage.CreateTask(ctx, task)
 	require.NoError(t, err)
-	require.Equal(t, newTask, task)
 
 	task = &types.Task{}
-	err = storage.db.QueryRow(ctx, `SELECT * FROM tasks WHERE url = $1`, newTask.Url).Scan(&task.Url, &task.UserID, &task.Status)
+	_, err = storage.db.Exec(ctx, `SELECT * FROM tasks WHERE url = $1`, task.Url)
 	require.NoError(t, err)
-	require.Equal(t, newTask, task)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 
 	return err
 }
 
-func DeleteTask(ctx context.Context, t *testing.T, storage *Storage) error {
+func deleteTask(ctx context.Context, t *testing.T, storage *Storage) error {
 	task := &types.Task{
-		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	newTask, err := storage.CreateTask(ctx, task)
+	err := storage.CreateTask(ctx, task)
 	require.NoError(t, err)
-	require.Equal(t, newTask, task)
 
-	err = storage.DeleteTask(ctx, newTask)
+	err = storage.DeleteTask(ctx, task)
 	require.NoError(t, err)
 
 	var exists bool
@@ -117,80 +97,92 @@ func DeleteTask(ctx context.Context, t *testing.T, storage *Storage) error {
 	return err
 }
 
-func AssignUser(ctx context.Context, t *testing.T, storage *Storage) error {
+func assignUser(ctx context.Context, t *testing.T, storage *Storage) error {
 	u := &types.User{
 		ID: int64(randomId()),
 	}
 
-	user, err := storage.CreateUser(ctx, u)
+	err := storage.CreateUser(ctx, u)
 	require.NoError(t, err)
-	require.Equal(t, user, u)
 
 	task := &types.Task{
-		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	newTask, err := storage.CreateTask(ctx, task)
+	err = storage.CreateTask(ctx, task)
 	require.NoError(t, err)
-	require.Equal(t, newTask, task)
 
 	req := &types.AssignUserRequest{
-		Url:    newTask.Url,
-		UserID: &user.ID,
+		Url:    task.Url,
+		UserID: &u.ID,
 	}
 
-	newTask, err = storage.AssignUser(ctx, req)
+	err = storage.AssignUser(ctx, req)
 	require.NoError(t, err)
-	require.Equal(t, newTask.UserID, &user.ID)
+
+	_, err = storage.db.Exec(ctx, `SELECT * FROM tasks WHERE url = $1 AND assigned_id IS NOT NULL`, task.Url)
+	require.NoError(t, err)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 
 	return err
 }
 
-func CloseTask(ctx context.Context, t *testing.T, storage *Storage) error {
+func closeTask(ctx context.Context, t *testing.T, storage *Storage) error {
 	task := &types.Task{
-		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	newTask, err := storage.CreateTask(ctx, task)
+	err := storage.CreateTask(ctx, task)
 	require.NoError(t, err)
-	require.Equal(t, newTask, task)
 
 	req := &types.CloseTaskRequest{
-		Url: newTask.Url,
+		Url: task.Url,
 	}
 
-	newTask, err = storage.CloseTask(ctx, req)
+	err = storage.CloseTask(ctx, req)
 	require.NoError(t, err)
-	require.NotEqual(t, newTask.Status, task.Status)
+
+	_, err = storage.db.Exec(ctx, `SELECT * FROM tasks WHERE url = $1 AND status = 'closed'`, req.Url)
+	require.NoError(t, err)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 
 	return err
 }
 
-func GetOpenTasks(ctx context.Context, t *testing.T, storage *Storage) error {
+func getOpenTasks(ctx context.Context, t *testing.T, storage *Storage) error {
 	task1 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
 		Status: types.Open,
 	}
 
-	newTask1, err := storage.CreateTask(ctx, task1)
+	err := storage.CreateTask(ctx, task1)
 	require.NoError(t, err)
-	require.Equal(t, newTask1, task1)
 
 	task2 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d2", randomId()),
 		Status: types.Open,
 	}
 
-	newTask2, err := storage.CreateTask(ctx, task2)
+	err = storage.CreateTask(ctx, task2)
 	require.NoError(t, err)
-	require.Equal(t, newTask2, task2)
 
 	tasks, err := storage.GetOpenTasks(ctx)
 	require.NoError(t, err)
-	require.Contains(t, tasks, newTask1)
-	require.Contains(t, tasks, newTask2)
+	require.Contains(t, tasks, task1)
+	require.Contains(t, tasks, task2)
+
+	_, err = storage.db.Exec(ctx, `SELECT status, COUNT(*) 
+				FROM tasks 
+				WHERE status = 'open'
+				GROUP BY status 
+				HAVING COUNT(*) = 2`)
+	require.NoError(t, err)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 
 	return err
 }

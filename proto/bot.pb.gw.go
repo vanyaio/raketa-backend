@@ -360,7 +360,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks/opens"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -534,7 +534,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks/opens"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -564,7 +564,7 @@ var (
 
 	pattern_RaketaService_CloseTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"tasks", "close"}, ""))
 
-	pattern_RaketaService_GetOpenTasks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"tasks"}, ""))
+	pattern_RaketaService_GetOpenTasks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"tasks", "opens"}, ""))
 )
 
 var (

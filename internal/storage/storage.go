@@ -9,7 +9,7 @@ import (
 	"github.com/vanyaio/raketa-backend/internal/types"
 )
 
-type PgxIface interface {
+type pgxIface interface {
 	Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
 	Query(context.Context, string, ...interface{}) (pgx.Rows, error)
 	QueryRow(context.Context, string, ...interface{}) pgx.Row
@@ -19,77 +19,62 @@ type PgxIface interface {
 }
 
 type Storage struct {
-	db PgxIface
+	db pgxIface
 }
 
-func NewStorage(db PgxIface) *Storage {
+func NewStorage(db pgxIface) *Storage {
 	return &Storage{
 		db: db,
 	}
 }
 
-func (s *Storage) CreateUser(ctx context.Context, user *types.User) (*types.User, error) {
-	u := &types.User{}
-
-	query := `INSERT INTO users (id) VALUES ($1) RETURNING *`
-	if err := s.db.QueryRow(ctx, query, user.ID).Scan(&u.ID); err != nil {
-		return nil, err
+func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
+	query := `INSERT INTO users (id) VALUES ($1)`
+	_, err := s.db.Exec(ctx, query, user.ID)
+	if err != nil {
+		return err
 	}
-
-	return u, nil
+	return nil
 }
 
-func (s *Storage) CreateTask(ctx context.Context, task *types.Task) (*types.Task, error) {
-	t := &types.Task{}
-
-	query := `INSERT INTO tasks (url, assigned_id, status) VALUES ($1, NULL, $2) RETURNING *`
-
-	if err := s.db.QueryRow(ctx, query, task.Url, task.Status).Scan(&t.Url, &t.UserID, &t.Status); err != nil {
-		return nil, err
+func (s *Storage) CreateTask(ctx context.Context, task *types.Task) error {
+	query := `INSERT INTO tasks (url, assigned_id, status) VALUES ($1, NULL, $2)`
+	_, err := s.db.Exec(ctx, query, task.Url, task.Status)
+	if err != nil {
+		return err
 	}
-
-	return t, nil
+	return nil
 }
 
 func (s *Storage) DeleteTask(ctx context.Context, task *types.Task) error {
 	query := `DELETE FROM tasks WHERE url = $1`
-
 	_, err := s.db.Exec(ctx, query, task.Url)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
-func (s *Storage) AssignUser(ctx context.Context, req *types.AssignUserRequest) (*types.Task, error) {
+func (s *Storage) AssignUser(ctx context.Context, req *types.AssignUserRequest) error {
 	query := `UPDATE tasks
 		SET assigned_id = COALESCE($1, assigned_id)
-		WHERE url = $2
-		RETURNING *`
-
-	task := &types.Task{}
-
-	if err := s.db.QueryRow(ctx, query, req.UserID, req.Url).Scan(&task.Url, &task.UserID, &task.Status); err != nil {
-		return nil, err
+		WHERE url = $2`
+	_, err := s.db.Exec(ctx, query, req.UserID, req.Url)
+	if err != nil {
+		return err
 	}
-
-	return task, nil
+	return nil
 }
 
-func (s *Storage) CloseTask(ctx context.Context, req *types.CloseTaskRequest) (*types.Task, error) {
+func (s *Storage) CloseTask(ctx context.Context, req *types.CloseTaskRequest) error {
 	query := `UPDATE tasks
 		SET status = 'closed'
-		WHERE url = $1
-		RETURNING *`
-
-	task := &types.Task{}
-
-	if err := s.db.QueryRow(ctx, query, req.Url).Scan(&task.Url, &task.UserID, &task.Status); err != nil {
-		return nil, err
+		WHERE url = $1`
+	_, err := s.db.Exec(ctx, query, req.Url)
+	if err != nil {
+		return err
 	}
-
-	return task, nil
+	return nil
 }
 
 func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {

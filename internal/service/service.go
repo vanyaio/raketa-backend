@@ -8,11 +8,11 @@ import (
 )
 
 type storage interface {
-	CreateUser(ctx context.Context, user *types.User) (*types.User, error)
-	CreateTask(ctx context.Context, task *types.Task) (*types.Task, error)
+	CreateUser(ctx context.Context, user *types.User) error
+	CreateTask(ctx context.Context, task *types.Task) error
 	DeleteTask(ctx context.Context, task *types.Task) error
-	AssignUser(ctx context.Context, req *types.AssignUserRequest) (*types.Task, error)
-	CloseTask(ctx context.Context, req *types.CloseTaskRequest) (*types.Task, error)
+	AssignUser(ctx context.Context, req *types.AssignUserRequest) error
+	CloseTask(ctx context.Context, req *types.CloseTaskRequest) error
 	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
 }
 
@@ -28,10 +28,9 @@ func NewBotService(storage storage) *BotService {
 }
 
 func (s *BotService) SignUp(ctx context.Context, req *proto.SignUpRequest) (*proto.SignUpResponse, error) {
-	_, err := s.storage.CreateUser(ctx, &types.User{
+	if err := s.storage.CreateUser(ctx, &types.User{
 		ID: req.Id,
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
@@ -44,8 +43,7 @@ func (s *BotService) CreateTask(ctx context.Context, req *proto.CreateTaskReques
 		Status: types.Open,
 	}
 
-	_, err := s.storage.CreateTask(ctx, t)
-	if err != nil {
+	if err := s.storage.CreateTask(ctx, t); err != nil {
 		return nil, err
 	}
 
@@ -64,11 +62,10 @@ func (s *BotService) DeleteTask(ctx context.Context, req *proto.DeleteTaskReques
 }
 
 func (s *BotService) AssignUser(ctx context.Context, req *proto.AssignUserRequest) (*proto.AssignUserResponse, error) {
-	_, err := s.storage.AssignUser(ctx, &types.AssignUserRequest{
+	if err := s.storage.AssignUser(ctx, &types.AssignUserRequest{
 		Url:    req.Url,
 		UserID: &req.UserId,
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
@@ -76,10 +73,9 @@ func (s *BotService) AssignUser(ctx context.Context, req *proto.AssignUserReques
 }
 
 func (s *BotService) CloseTask(ctx context.Context, req *proto.CloseTaskRequest) (*proto.CloseTaskResponse, error) {
-	_, err := s.storage.CloseTask(ctx, &types.CloseTaskRequest{
+	if err := s.storage.CloseTask(ctx, &types.CloseTaskRequest{
 		Url: req.Url,
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
