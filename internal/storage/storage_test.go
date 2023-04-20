@@ -1,230 +1,215 @@
 package storage
 
 import (
-	_ "context"
-	_ "regexp"
-	_ "testing"
+	"context"
+	"fmt"
+	"math/rand"
+	"sync"
+	"testing"
+	"time"
 
-	_ "github.com/pashagolub/pgxmock/v2"
-	_ "github.com/stretchr/testify/require"
-	_ "github.com/vanyaio/raketa-backend/internal/types"
-	_ "github.com/vanyaio/raketa-backend/proto"
+	"github.com/stretchr/testify/require"
+	"github.com/vanyaio/raketa-backend/internal/types"
+	"github.com/vanyaio/raketa-backend/pkg/db"
 )
 
-// func Test_CreateUser(t *testing.T) {
-// 	t.Parallel()
+func Test_DB(t *testing.T) {
+	ctx := context.Background()
+	// db conn
+	pool, err := db.NewPool(ctx)
+	require.NoError(t, err)
+	defer pool.Close()
 
-// 	mock, err := pgxmock.NewPool()
-// 	require.NoError(t, err)
-// 	defer mock.Close()
+	storage := NewStorage(pool)
+	wg := &sync.WaitGroup{}
+	wg.Add(6)
+	go func() {
+		defer wg.Done()
+		err = CreateUser(ctx, t, storage)
+		require.NoError(t, err)
+	}()
+	go func() {
+		defer wg.Done()
+		err = CreateTask(ctx, t, storage)
+		require.NoError(t, err)
+	}()
+	go func() {
+		defer wg.Done()
+		err = DeleteTask(ctx, t, storage)
+		require.NoError(t, err)
+	}()
+	go func() {
+		defer wg.Done()
+		err = AssignUser(ctx, t, storage)
+		require.NoError(t, err)
+	}()
+	go func() {
+		defer wg.Done()
+		err = CloseTask(ctx, t, storage)
+		require.NoError(t, err)
+	}()
+	go func() {
+		defer wg.Done()
+		err = GetOpenTasks(ctx, t, storage)
+		require.NoError(t, err)
+	}()
+	wg.Wait()
+	
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+}
 
-// 	u := &types.User{
-// 		ID: 1234,
-// 	}
+func CreateUser(ctx context.Context, t *testing.T, storage *Storage) error {
+	u := &types.User{
+		ID: int64(randomId()),
+	}
 
-// 	colums := []string{
-// 		"id",
-// 	}
+	user, err := storage.CreateUser(ctx, u)
+	require.NoError(t, err)
+	require.Equal(t, user, u)
 
-// 	row := pgxmock.NewRows(colums).AddRow(
-// 		int64(1234),
-// 	)
+	u = &types.User{}
+	err = storage.db.QueryRow(ctx, `SELECT * FROM users WHERE id = $1`, user.ID).Scan(&u.ID)
+	require.NoError(t, err)
+	require.Equal(t, user, u)
 
-// 	mock.ExpectQuery(regexp.QuoteMeta(`INSERT INTO users (id) VALUES ($1) RETURNING *`)).WithArgs(u.ID).WillReturnRows(row)
+	return err
+}
 
-// 	storage := NewStorage(mock)
+func CreateTask(ctx context.Context, t *testing.T, storage *Storage) error {
+	task := &types.Task{
+		Url:    randomURL(),
+		Status: types.Open,
+	}
 
-// 	user, err := storage.CreateUser(context.Background(), u)
-// 	require.NoError(t, err)
-// 	require.Equal(t, user, u)
-// }
+	newTask, err := storage.CreateTask(ctx, task)
+	require.NoError(t, err)
+	require.Equal(t, newTask, task)
 
-// func Test_CreateTask(t *testing.T) {
+	task = &types.Task{}
+	err = storage.db.QueryRow(ctx, `SELECT * FROM tasks WHERE url = $1`, newTask.Url).Scan(&task.Url, &task.UserID, &task.Status)
+	require.NoError(t, err)
+	require.Equal(t, newTask, task)
 
-// 	t.Parallel()
+	return err
+}
 
-// 	mock, err := pgxmock.NewPool()
-// 	require.NoError(t, err)
-// 	defer mock.Close()
+func DeleteTask(ctx context.Context, t *testing.T, storage *Storage) error {
+	task := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Status: types.Open,
+	}
 
-// 	task := &types.Task{
-// 		URL:    "qwerty",
-// 		Status: &types.Open,
-// 	}
+	newTask, err := storage.CreateTask(ctx, task)
+	require.NoError(t, err)
+	require.Equal(t, newTask, task)
 
-// 	colums := []string{
-// 		"url",
-// 		"id",
-// 		"status",
-// 	}
+	err = storage.DeleteTask(ctx, newTask)
+	require.NoError(t, err)
 
-// 	row := pgxmock.NewRows(colums).AddRow(
-// 		"qwerty",
-// 		nil,
-// 		&types.Open,
-// 	)
+	var exists bool
+	query := `SELECT NOT EXISTS (SELECT * FROM tasks WHERE url = $1)`
+	err = storage.db.QueryRow(ctx, query, task.Url).Scan(&exists)
+	if err != nil {
+		require.Error(t, err)
+	}
+	require.NoError(t, err)
 
-// 	mock.ExpectQuery(
-// 		regexp.QuoteMeta(
-// 			`INSERT INTO tasks (url, assigned_id, status) VALUES ($1, NULL, $2) RETURNING *`)).WithArgs(task.URL, task.Status).WillReturnRows(row)
+	return err
+}
 
-// 	storage := NewStorage(mock)
+func AssignUser(ctx context.Context, t *testing.T, storage *Storage) error {
+	u := &types.User{
+		ID: int64(randomId()),
+	}
 
-// 	newTask, err := storage.CreateTask(context.Background(), task)
-// 	require.NoError(t, err)
-// 	require.Equal(t, newTask, task)
-// }
+	user, err := storage.CreateUser(ctx, u)
+	require.NoError(t, err)
+	require.Equal(t, user, u)
 
-// func Test_DeleteTask(t *testing.T) {
-// 	t.Parallel()
+	task := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Status: types.Open,
+	}
 
-// 	mock, err := pgxmock.NewPool()
-// 	require.NoError(t, err)
-// 	defer mock.Close()
+	newTask, err := storage.CreateTask(ctx, task)
+	require.NoError(t, err)
+	require.Equal(t, newTask, task)
 
-// 	task := &types.Task{
-// 		URL:    "qwerty",
-// 		Status: &types.Open,
-// 	}
+	req := &types.AssignUserRequest{
+		Url:    newTask.Url,
+		UserID: &user.ID,
+	}
 
-// 	mock.ExpectExec(
-// 		regexp.QuoteMeta(
-// 			`DELETE FROM tasks WHERE url = $1`)).WithArgs(task.URL).WillReturnResult(pgxmock.NewResult("DELETE", 1))
+	newTask, err = storage.AssignUser(ctx, req)
+	require.NoError(t, err)
+	require.Equal(t, newTask.UserID, &user.ID)
 
-// 	storage := NewStorage(mock)
+	return err
+}
 
-// 	err = storage.DeleteTask(context.Background(), task)
-// 	require.NoError(t, err)
-// }
+func CloseTask(ctx context.Context, t *testing.T, storage *Storage) error {
+	task := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Status: types.Open,
+	}
 
-// func Test_AssignWorker(t *testing.T) {
-// 	t.Parallel()
+	newTask, err := storage.CreateTask(ctx, task)
+	require.NoError(t, err)
+	require.Equal(t, newTask, task)
 
-// 	mock, err := pgxmock.NewPool()
-// 	require.NoError(t, err)
-// 	defer mock.Close()
+	req := &types.CloseTaskRequest{
+		Url: newTask.Url,
+	}
 
+	newTask, err = storage.CloseTask(ctx, req)
+	require.NoError(t, err)
+	require.NotEqual(t, newTask.Status, task.Status)
 
-// 	req := &proto.AssignRequest{
-// 		Url:    "qwerty",
-// 		UserId: 1234,
-// 	}
+	return err
+}
 
-// 	var id int64 = 1234
+func GetOpenTasks(ctx context.Context, t *testing.T, storage *Storage) error {
+	task1 := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
+		Status: types.Open,
+	}
 
-// 	task := &types.Task{
-// 		URL:    "qwerty",
-// 		Status: &types.Open,
-// 		UserID: &id,
-// 	}
+	newTask1, err := storage.CreateTask(ctx, task1)
+	require.NoError(t, err)
+	require.Equal(t, newTask1, task1)
 
-// 	colums := []string{
-// 		"url",
-// 		"id",
-// 		"status",
-// 	}
+	task2 := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("%d2", randomId()),
+		Status: types.Open,
+	}
 
-// 	row := pgxmock.NewRows(colums).AddRow(
-// 		"qwerty",
-// 		&id,
-// 		&types.Open,
-// 	)
+	newTask2, err := storage.CreateTask(ctx, task2)
+	require.NoError(t, err)
+	require.Equal(t, newTask2, task2)
 
-// 	mock.ExpectQuery(regexp.QuoteMeta(`UPDATE tasks
-// 			SET assigned_id = COALESCE($1, assigned_id)
-// 			WHERE url = $2
-// 			RETURNING *`)).WithArgs(req.UserId, req.Url).WillReturnRows(row)
+	tasks, err := storage.GetOpenTasks(ctx)
+	require.NoError(t, err)
+	require.Contains(t, tasks, newTask1)
+	require.Contains(t, tasks, newTask2)
 
-// 	storage := NewStorage(mock)
+	return err
+}
 
-// 	newTask, err := storage.AssignWorker(context.Background(), req)
-// 	require.NoError(t, err)
-// 	require.Equal(t, newTask, task)
-// }
+func randomURL() string {
+	b := make([]byte, 16)
 
-// func Test_CloseTask(t *testing.T) {
-// 	t.Parallel()
+	s := rand.NewSource(time.Now().Unix())
+	r := rand.New(s)
 
-// 	mock, err := pgxmock.NewPool()
-// 	require.NoError(t, err)
-// 	defer mock.Close()
+	_, err := r.Read(b)
+	if err != nil {
+		return ""
+	}
 
-// 	req := &proto.CloseRequest{
-// 		Url: "qwerty",
-// 	}
+	return fmt.Sprintf("%x", b)
+}
 
-// 	var id int64 = 1234
-
-// 	task := &types.Task{
-// 		URL:    "qwerty",
-// 		Status: &types.Closed,
-// 		UserID: &id,
-// 	}
-
-// 	colums := []string{
-// 		"url",
-// 		"id",
-// 		"status",
-// 	}
-
-// 	row := pgxmock.NewRows(colums).AddRow(
-// 		"qwerty",
-// 		&id,
-// 		&types.Closed,
-// 	)
-
-// 	mock.ExpectQuery(regexp.QuoteMeta(`UPDATE tasks
-// 		SET status = 'closed'
-// 		WHERE url = $1
-// 		RETURNING *`)).WithArgs(req.Url).WillReturnRows(row)
-
-// 	storage := NewStorage(mock)
-
-// 	newTask, err := storage.CloseTask(context.Background(), req)
-// 	require.NoError(t, err)
-// 	require.Equal(t, newTask, task)
-// }
-
-// func Test_GetOpenTask(t *testing.T) {
-// 	t.Parallel()
-
-// 	mock, err := pgxmock.NewPool()
-// 	require.NoError(t, err)
-// 	defer mock.Close()
-
-// 	var id int64 = 1234
-
-// 	colums1 := []string{
-// 		"url",
-// 		"id",
-// 		"status",
-// 	}
-
-// 	row1 := pgxmock.NewRows(colums1).AddRow(
-// 		"qwerty",
-// 		&id,
-// 		&types.Open,
-// 	)
-
-
-// 	colums2 := []string{
-// 		"url",
-// 		"id",
-// 		"status",
-// 	}
-
-// 	row2 := pgxmock.NewRows(colums2).AddRow(
-// 		"qwerty1",
-// 		nil,
-// 		&types.Open,
-// 	)
-
-
-// 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM tasks WHERE status = 'open'`)).WillReturnRows(row1, row2)
-
-// 	storage := NewStorage(mock)
-
-// 	newTask, err := storage.GetOpenTasks(context.Background())
-// 	require.NoError(t, err)
-// 	require.NotNil(t, newTask)
-// }
+func randomId() int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(100000)
+}
