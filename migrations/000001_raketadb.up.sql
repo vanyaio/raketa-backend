@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id INTEGER PRIMARY KEY 
+    id bigint PRIMARY KEY 
 );
 
 CREATE TYPE task_status AS ENUM (
@@ -10,6 +10,6 @@ CREATE TYPE task_status AS ENUM (
 
 CREATE TABLE tasks (
   url VARCHAR(255) PRIMARY KEY,
-  assigned_id INTEGER REFERENCES users(id),
+  assigned_id bigint REFERENCES users(id),
   status task_status
 );
