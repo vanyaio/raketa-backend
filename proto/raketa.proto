@@ -38,7 +38,7 @@ service RaketaService {
     };
     rpc GetOpenTasks(GetOpenTasksRequest) returns (GetOpenTasksResponse) {
         option (google.api.http) = {
-            get: "/tasks/opens"
+            get: "/tasks/open"
         };
     };
 }
