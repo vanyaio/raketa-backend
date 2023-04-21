@@ -48,6 +48,7 @@ func createUser(ctx context.Context, t *testing.T, storage *Storage) {
 	if err != nil {
 		require.Error(t, err)
 	}
+	require.True(t, exists)
 	require.NoError(t, err)
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
@@ -68,6 +69,7 @@ func createTask(ctx context.Context, t *testing.T, storage *Storage) {
 	if err != nil {
 		require.Error(t, err)
 	}
+	require.True(t, exists)
 	require.NoError(t, err)
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
@@ -85,12 +87,13 @@ func deleteTask(ctx context.Context, t *testing.T, storage *Storage) {
 	err = storage.DeleteTask(ctx, task)
 	require.NoError(t, err)
 
-	var exists bool
+	var notExists bool
 	query := `SELECT NOT EXISTS (SELECT * FROM tasks WHERE url = $1)`
-	err = storage.db.QueryRow(ctx, query, task.Url).Scan(&exists)
+	err = storage.db.QueryRow(ctx, query, task.Url).Scan(&notExists)
 	if err != nil {
 		require.Error(t, err)
 	}
+	require.True(t, notExists)
 	require.NoError(t, err)
 }
 
@@ -124,6 +127,7 @@ func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
 	if err != nil {
 		require.Error(t, err)
 	}
+	require.True(t, exists)
 	require.NoError(t, err)
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
@@ -151,43 +155,42 @@ func closeTask(ctx context.Context, t *testing.T, storage *Storage) {
 	if err != nil {
 		require.Error(t, err)
 	}
+	require.True(t, exists)
 	require.NoError(t, err)
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 }
 
 func getOpenTasks(ctx context.Context, t *testing.T, storage *Storage) {
-	task1 := &types.Task{
+	taskOpen1 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
 		Status: types.Open,
 	}
 
-	err := storage.CreateTask(ctx, task1)
+	err := storage.CreateTask(ctx, taskOpen1)
 	require.NoError(t, err)
 
-	task2 := &types.Task{
+	taskOpen2 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d2", randomId()),
 		Status: types.Open,
 	}
 
-	err = storage.CreateTask(ctx, task2)
+	err = storage.CreateTask(ctx, taskOpen2)
+	require.NoError(t, err)
+
+	taskClosed := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("%d3", randomId()),
+		Status: types.Closed,
+	}
+
+	err = storage.CreateTask(ctx, taskClosed)
 	require.NoError(t, err)
 
 	tasks, err := storage.GetOpenTasks(ctx)
 	require.NoError(t, err)
-	require.Contains(t, tasks, task1)
-	require.Contains(t, tasks, task2)
-
-	var exists bool
-	query := `SELECT EXISTS (SELECT status, COUNT(*) 
-			FROM tasks 
-			GROUP BY status 
-			HAVING COUNT(*) = 2)`
-	err = storage.db.QueryRow(ctx, query).Scan(&exists)
-	if err != nil {
-		require.Error(t, err)
-	}
-	require.NoError(t, err)
+	require.Contains(t, tasks, taskOpen1)
+	require.Contains(t, tasks, taskOpen2)
+	require.NotContains(t, tasks, taskClosed)
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 }

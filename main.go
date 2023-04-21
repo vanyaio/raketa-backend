@@ -51,7 +51,7 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
-	
+
 	// Graceful Shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)

@@ -92,7 +92,6 @@ func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksReque
 	}, nil
 }
 
-
 func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 	tasksProto := []*proto.Task{}
 

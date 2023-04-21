@@ -94,7 +94,7 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 		tasks = append(tasks, task)
 	}
 	if err := rows.Err(); err != nil {
-        return nil, err
-    }
+		return nil, err
+	}
 	return tasks, nil
 }
