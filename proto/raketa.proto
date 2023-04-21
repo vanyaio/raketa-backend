@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package raketa;
+
+option go_package = "github.com/vanyaio/raketa-backend/proto;raketapb";
+
+import "google/api/annotations.proto";
+
+service RaketaService {
+    rpc SignUp(SignUpRequest) returns (SignUpResponse) {
+        option (google.api.http) = {
+            post: "/users/sign-up"
+            body: "*"
+        };
+    };
+    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {
+        option (google.api.http) = {
+            post: "/tasks/create"
+            body: "*"
+        };
+    };
+    rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse) {
+        option (google.api.http) = {
+            delete: "/tasks/delete"
+        };
+    };
+    rpc AssignUser(AssignUserRequest) returns (AssignUserResponse) {
+        option (google.api.http) = {
+            patch: "/users/assign"
+            body: "*"
+        };
+    };
+    rpc CloseTask(CloseTaskRequest) returns (CloseTaskResponse) {
+        option (google.api.http) = {
+            patch: "/tasks/close"
+            body: "*"
+        };
+    };
+    rpc GetOpenTasks(GetOpenTasksRequest) returns (GetOpenTasksResponse) {
+        option (google.api.http) = {
+            get: "/tasks/open"
+        };
+    };
+}
+
+message SignUpRequest{
+    int64 id = 1;
+}
+
+message SignUpResponse {}
+
+message CreateTaskRequest {
+    string url = 1;
+}
+
+message CreateTaskResponse {}
+
+message DeleteTaskRequest {
+    string url = 1;
+}
+
+message DeleteTaskResponse {}
+
+message AssignUserRequest {
+    string url = 1;
+    int64 user_id = 2;
+}
+
+message AssignUserResponse {}
+
+message CloseTaskRequest {
+    string url = 1;
+}
+
+message CloseTaskResponse {}
+
+message GetOpenTasksRequest {}
+
+message GetOpenTasksResponse {
+    repeated Task tasks = 1;
+}
+
+message Task {
+    enum Status {
+        UNKNOWN = 0;
+        OPEN = 1;
+        CLOSED = 2;
+        DECLINED = 3;
+    }
+    string url = 1;
+    int64 user_id = 2;
+    Status status = 3;
+}
