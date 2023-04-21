@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.6
-// source: bot.proto
+// source: raketa.proto
 
 package raketapb
 
@@ -290,5 +290,5 @@ var RaketaService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "bot.proto",
+	Metadata: "raketa.proto",
 }

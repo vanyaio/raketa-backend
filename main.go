@@ -21,24 +21,21 @@ import (
 )
 
 func main() {
-	grpcPort := flag.String("gp", ":50052", "grpc server port")
-	restPort := flag.String("rp", ":9090", "rest server port")
+	grpcPort := flag.String("grpc-port", ":50052", "grpc server port")
+	restPort := flag.String("rest-port", ":9090", "rest server port")
 	flag.Parse()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// db conn
 	pool, err := db.NewPool(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer pool.Close()
 
-	// storage
 	storage := storage.NewStorage(pool)
 
-	// service
 	service := service.NewBotService(storage)
 
 	// grpc server
@@ -62,14 +59,13 @@ func main() {
 	<-quit
 }
 
-func runGRPCServer(service *service.BotService, port string) error {
+func runGRPCServer(service *service.Service, port string) error {
 	server := grpc.NewServer(grpc.MaxConcurrentStreams(1000))
 
 	proto.RegisterRaketaServiceServer(server, service)
 
-	// reflection
 	reflection.Register(server)
-	// listen on port :50052
+
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatal(err)
@@ -82,7 +78,7 @@ func runGRPCServer(service *service.BotService, port string) error {
 	return nil
 }
 
-func runRESTServer(service *service.BotService, port string) error {
+func runRESTServer(service *service.Service, port string) error {
 	mux := runtime.NewServeMux()
 
 	err := proto.RegisterRaketaServiceHandlerServer(context.Background(), mux, service)

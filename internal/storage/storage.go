@@ -79,14 +79,13 @@ func (s *Storage) CloseTask(ctx context.Context, req *types.CloseTaskRequest) er
 
 func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 	query := `SELECT * FROM tasks WHERE status = 'open'`
-
 	rows, err := s.db.Query(ctx, query)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	tasks := []*types.Task{}
-
 	for rows.Next() {
 		task := &types.Task{}
 		if err := rows.Scan(&task.Url, &task.UserID, &task.Status); err != nil {
@@ -94,6 +93,8 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 		}
 		tasks = append(tasks, task)
 	}
-
+	if err := rows.Err(); err != nil {
+        return nil, err
+    }
 	return tasks, nil
 }

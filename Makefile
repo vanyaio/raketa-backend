@@ -5,7 +5,7 @@ run: build
 	@./bin/api 
 
 run-ports:
-	go run main.go -gp=$(gp) -rp=$(rp)
+	go run main.go -grpc-port=$(grpc-port) -rest-port=$(rest-port)
 
 postgres-up:
 	docker run --name raketadb \

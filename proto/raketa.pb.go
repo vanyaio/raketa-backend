@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.30.0
 // 	protoc        v3.21.6
-// source: bot.proto
+// source: raketa.proto
 
 package raketapb
 
@@ -24,22 +24,25 @@ const (
 type Task_Status int32
 
 const (
-	Task_OPEN     Task_Status = 0
-	Task_CLOSED   Task_Status = 1
-	Task_DECLINED Task_Status = 2
+	Task_UNKNOWN  Task_Status = 0
+	Task_OPEN     Task_Status = 1
+	Task_CLOSED   Task_Status = 2
+	Task_DECLINED Task_Status = 3
 )
 
 // Enum value maps for Task_Status.
 var (
 	Task_Status_name = map[int32]string{
-		0: "OPEN",
-		1: "CLOSED",
-		2: "DECLINED",
+		0: "UNKNOWN",
+		1: "OPEN",
+		2: "CLOSED",
+		3: "DECLINED",
 	}
 	Task_Status_value = map[string]int32{
-		"OPEN":     0,
-		"CLOSED":   1,
-		"DECLINED": 2,
+		"UNKNOWN":  0,
+		"OPEN":     1,
+		"CLOSED":   2,
+		"DECLINED": 3,
 	}
 )
 
@@ -54,11 +57,11 @@ func (x Task_Status) String() string {
 }
 
 func (Task_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_bot_proto_enumTypes[0].Descriptor()
+	return file_raketa_proto_enumTypes[0].Descriptor()
 }
 
 func (Task_Status) Type() protoreflect.EnumType {
-	return &file_bot_proto_enumTypes[0]
+	return &file_raketa_proto_enumTypes[0]
 }
 
 func (x Task_Status) Number() protoreflect.EnumNumber {
@@ -67,7 +70,7 @@ func (x Task_Status) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Task_Status.Descriptor instead.
 func (Task_Status) EnumDescriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{12, 0}
+	return file_raketa_proto_rawDescGZIP(), []int{12, 0}
 }
 
 type SignUpRequest struct {
@@ -81,7 +84,7 @@ type SignUpRequest struct {
 func (x *SignUpRequest) Reset() {
 	*x = SignUpRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[0]
+		mi := &file_raketa_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -94,7 +97,7 @@ func (x *SignUpRequest) String() string {
 func (*SignUpRequest) ProtoMessage() {}
 
 func (x *SignUpRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[0]
+	mi := &file_raketa_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -107,7 +110,7 @@ func (x *SignUpRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SignUpRequest.ProtoReflect.Descriptor instead.
 func (*SignUpRequest) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{0}
+	return file_raketa_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *SignUpRequest) GetId() int64 {
@@ -126,7 +129,7 @@ type SignUpResponse struct {
 func (x *SignUpResponse) Reset() {
 	*x = SignUpResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[1]
+		mi := &file_raketa_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -139,7 +142,7 @@ func (x *SignUpResponse) String() string {
 func (*SignUpResponse) ProtoMessage() {}
 
 func (x *SignUpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[1]
+	mi := &file_raketa_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -152,7 +155,7 @@ func (x *SignUpResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SignUpResponse.ProtoReflect.Descriptor instead.
 func (*SignUpResponse) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{1}
+	return file_raketa_proto_rawDescGZIP(), []int{1}
 }
 
 type CreateTaskRequest struct {
@@ -166,7 +169,7 @@ type CreateTaskRequest struct {
 func (x *CreateTaskRequest) Reset() {
 	*x = CreateTaskRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[2]
+		mi := &file_raketa_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -179,7 +182,7 @@ func (x *CreateTaskRequest) String() string {
 func (*CreateTaskRequest) ProtoMessage() {}
 
 func (x *CreateTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[2]
+	mi := &file_raketa_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -192,7 +195,7 @@ func (x *CreateTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTaskRequest.ProtoReflect.Descriptor instead.
 func (*CreateTaskRequest) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{2}
+	return file_raketa_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateTaskRequest) GetUrl() string {
@@ -211,7 +214,7 @@ type CreateTaskResponse struct {
 func (x *CreateTaskResponse) Reset() {
 	*x = CreateTaskResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[3]
+		mi := &file_raketa_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -224,7 +227,7 @@ func (x *CreateTaskResponse) String() string {
 func (*CreateTaskResponse) ProtoMessage() {}
 
 func (x *CreateTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[3]
+	mi := &file_raketa_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -237,7 +240,7 @@ func (x *CreateTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTaskResponse.ProtoReflect.Descriptor instead.
 func (*CreateTaskResponse) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{3}
+	return file_raketa_proto_rawDescGZIP(), []int{3}
 }
 
 type DeleteTaskRequest struct {
@@ -251,7 +254,7 @@ type DeleteTaskRequest struct {
 func (x *DeleteTaskRequest) Reset() {
 	*x = DeleteTaskRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[4]
+		mi := &file_raketa_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -264,7 +267,7 @@ func (x *DeleteTaskRequest) String() string {
 func (*DeleteTaskRequest) ProtoMessage() {}
 
 func (x *DeleteTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[4]
+	mi := &file_raketa_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -277,7 +280,7 @@ func (x *DeleteTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTaskRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTaskRequest) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{4}
+	return file_raketa_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DeleteTaskRequest) GetUrl() string {
@@ -296,7 +299,7 @@ type DeleteTaskResponse struct {
 func (x *DeleteTaskResponse) Reset() {
 	*x = DeleteTaskResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[5]
+		mi := &file_raketa_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -309,7 +312,7 @@ func (x *DeleteTaskResponse) String() string {
 func (*DeleteTaskResponse) ProtoMessage() {}
 
 func (x *DeleteTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[5]
+	mi := &file_raketa_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -322,7 +325,7 @@ func (x *DeleteTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTaskResponse.ProtoReflect.Descriptor instead.
 func (*DeleteTaskResponse) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{5}
+	return file_raketa_proto_rawDescGZIP(), []int{5}
 }
 
 type AssignUserRequest struct {
@@ -337,7 +340,7 @@ type AssignUserRequest struct {
 func (x *AssignUserRequest) Reset() {
 	*x = AssignUserRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[6]
+		mi := &file_raketa_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -350,7 +353,7 @@ func (x *AssignUserRequest) String() string {
 func (*AssignUserRequest) ProtoMessage() {}
 
 func (x *AssignUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[6]
+	mi := &file_raketa_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -363,7 +366,7 @@ func (x *AssignUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssignUserRequest.ProtoReflect.Descriptor instead.
 func (*AssignUserRequest) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{6}
+	return file_raketa_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AssignUserRequest) GetUrl() string {
@@ -389,7 +392,7 @@ type AssignUserResponse struct {
 func (x *AssignUserResponse) Reset() {
 	*x = AssignUserResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[7]
+		mi := &file_raketa_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -402,7 +405,7 @@ func (x *AssignUserResponse) String() string {
 func (*AssignUserResponse) ProtoMessage() {}
 
 func (x *AssignUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[7]
+	mi := &file_raketa_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -415,7 +418,7 @@ func (x *AssignUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssignUserResponse.ProtoReflect.Descriptor instead.
 func (*AssignUserResponse) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{7}
+	return file_raketa_proto_rawDescGZIP(), []int{7}
 }
 
 type CloseTaskRequest struct {
@@ -429,7 +432,7 @@ type CloseTaskRequest struct {
 func (x *CloseTaskRequest) Reset() {
 	*x = CloseTaskRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[8]
+		mi := &file_raketa_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -442,7 +445,7 @@ func (x *CloseTaskRequest) String() string {
 func (*CloseTaskRequest) ProtoMessage() {}
 
 func (x *CloseTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[8]
+	mi := &file_raketa_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -455,7 +458,7 @@ func (x *CloseTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseTaskRequest.ProtoReflect.Descriptor instead.
 func (*CloseTaskRequest) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{8}
+	return file_raketa_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CloseTaskRequest) GetUrl() string {
@@ -474,7 +477,7 @@ type CloseTaskResponse struct {
 func (x *CloseTaskResponse) Reset() {
 	*x = CloseTaskResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[9]
+		mi := &file_raketa_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -487,7 +490,7 @@ func (x *CloseTaskResponse) String() string {
 func (*CloseTaskResponse) ProtoMessage() {}
 
 func (x *CloseTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[9]
+	mi := &file_raketa_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -500,7 +503,7 @@ func (x *CloseTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseTaskResponse.ProtoReflect.Descriptor instead.
 func (*CloseTaskResponse) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{9}
+	return file_raketa_proto_rawDescGZIP(), []int{9}
 }
 
 type GetOpenTasksRequest struct {
@@ -512,7 +515,7 @@ type GetOpenTasksRequest struct {
 func (x *GetOpenTasksRequest) Reset() {
 	*x = GetOpenTasksRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[10]
+		mi := &file_raketa_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -525,7 +528,7 @@ func (x *GetOpenTasksRequest) String() string {
 func (*GetOpenTasksRequest) ProtoMessage() {}
 
 func (x *GetOpenTasksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[10]
+	mi := &file_raketa_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -538,7 +541,7 @@ func (x *GetOpenTasksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOpenTasksRequest.ProtoReflect.Descriptor instead.
 func (*GetOpenTasksRequest) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{10}
+	return file_raketa_proto_rawDescGZIP(), []int{10}
 }
 
 type GetOpenTasksResponse struct {
@@ -552,7 +555,7 @@ type GetOpenTasksResponse struct {
 func (x *GetOpenTasksResponse) Reset() {
 	*x = GetOpenTasksResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[11]
+		mi := &file_raketa_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -565,7 +568,7 @@ func (x *GetOpenTasksResponse) String() string {
 func (*GetOpenTasksResponse) ProtoMessage() {}
 
 func (x *GetOpenTasksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[11]
+	mi := &file_raketa_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -578,7 +581,7 @@ func (x *GetOpenTasksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOpenTasksResponse.ProtoReflect.Descriptor instead.
 func (*GetOpenTasksResponse) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{11}
+	return file_raketa_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetOpenTasksResponse) GetTasks() []*Task {
@@ -601,7 +604,7 @@ type Task struct {
 func (x *Task) Reset() {
 	*x = Task{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_bot_proto_msgTypes[12]
+		mi := &file_raketa_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -614,7 +617,7 @@ func (x *Task) String() string {
 func (*Task) ProtoMessage() {}
 
 func (x *Task) ProtoReflect() protoreflect.Message {
-	mi := &file_bot_proto_msgTypes[12]
+	mi := &file_raketa_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -627,7 +630,7 @@ func (x *Task) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Task.ProtoReflect.Descriptor instead.
 func (*Task) Descriptor() ([]byte, []int) {
-	return file_bot_proto_rawDescGZIP(), []int{12}
+	return file_raketa_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Task) GetUrl() string {
@@ -648,50 +651,51 @@ func (x *Task) GetStatus() Task_Status {
 	if x != nil {
 		return x.Status
 	}
-	return Task_OPEN
+	return Task_UNKNOWN
 }
 
-var File_bot_proto protoreflect.FileDescriptor
+var File_raketa_proto protoreflect.FileDescriptor
 
-var file_bot_proto_rawDesc = []byte{
-	0x0a, 0x09, 0x62, 0x6f, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06, 0x72, 0x61, 0x6b,
-	0x65, 0x74, 0x61, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f,
-	0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x22, 0x1f, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02,
-	0x69, 0x64, 0x22, 0x10, 0x0a, 0x0e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x25, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x61,
+var file_raketa_proto_rawDesc = []byte{
+	0x0a, 0x0c, 0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06,
+	0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61,
+	0x70, 0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x22, 0x1f, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x02, 0x69, 0x64, 0x22, 0x10, 0x0a, 0x0e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x25, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03,
+	0x75, 0x72, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x14,
+	0x0a, 0x12, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x25, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x61,
 	0x73, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x14, 0x0a, 0x12, 0x43,
-	0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x25, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x14, 0x0a, 0x12, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x3e, 0x0a, 0x11, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x3e,
-	0x0a, 0x11, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x14,
-	0x0a, 0x12, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x24, 0x0a, 0x10, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x54, 0x61, 0x73,
-	0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x13, 0x0a, 0x11, 0x43, 0x6c,
-	0x6f, 0x73, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x15, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x4f, 0x70, 0x65, 0x6e, 0x54, 0x61, 0x73, 0x6b, 0x73, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x3a, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x4f, 0x70, 0x65,
-	0x6e, 0x54, 0x61, 0x73, 0x6b, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x22,
-	0x0a, 0x05, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0c, 0x2e,
-	0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x05, 0x74, 0x61, 0x73,
-	0x6b, 0x73, 0x22, 0x8c, 0x01, 0x0a, 0x04, 0x54, 0x61, 0x73, 0x6b, 0x12, 0x10, 0x0a, 0x03, 0x75,
-	0x72, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x17, 0x0a,
-	0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06,
-	0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x2b, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x13, 0x2e, 0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x2e,
-	0x54, 0x61, 0x73, 0x6b, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x06, 0x73, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x22, 0x2c, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x08, 0x0a,
-	0x04, 0x4f, 0x50, 0x45, 0x4e, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x43, 0x4c, 0x4f, 0x53, 0x45,
-	0x44, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x44, 0x45, 0x43, 0x4c, 0x49, 0x4e, 0x45, 0x44, 0x10,
-	0x02, 0x32, 0xb9, 0x04, 0x0a, 0x0d, 0x52, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x53, 0x65, 0x72, 0x76,
+	0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72,
+	0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49,
+	0x64, 0x22, 0x14, 0x0a, 0x12, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x55, 0x73, 0x65, 0x72, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x24, 0x0a, 0x10, 0x43, 0x6c, 0x6f, 0x73, 0x65,
+	0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75,
+	0x72, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x13, 0x0a,
+	0x11, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x15, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x4f, 0x70, 0x65, 0x6e, 0x54, 0x61, 0x73,
+	0x6b, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x3a, 0x0a, 0x14, 0x47, 0x65, 0x74,
+	0x4f, 0x70, 0x65, 0x6e, 0x54, 0x61, 0x73, 0x6b, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x22, 0x0a, 0x05, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x0c, 0x2e, 0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x05,
+	0x74, 0x61, 0x73, 0x6b, 0x73, 0x22, 0x99, 0x01, 0x0a, 0x04, 0x54, 0x61, 0x73, 0x6b, 0x12, 0x10,
+	0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c,
+	0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x2b, 0x0a, 0x06, 0x73, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x13, 0x2e, 0x72, 0x61, 0x6b, 0x65,
+	0x74, 0x61, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x06,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x39, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x00, 0x12, 0x08, 0x0a,
+	0x04, 0x4f, 0x50, 0x45, 0x4e, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06, 0x43, 0x4c, 0x4f, 0x53, 0x45,
+	0x44, 0x10, 0x02, 0x12, 0x0c, 0x0a, 0x08, 0x44, 0x45, 0x43, 0x4c, 0x49, 0x4e, 0x45, 0x44, 0x10,
+	0x03, 0x32, 0xb9, 0x04, 0x0a, 0x0d, 0x52, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x53, 0x65, 0x72, 0x76,
 	0x69, 0x63, 0x65, 0x12, 0x52, 0x0a, 0x06, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x12, 0x15, 0x2e,
 	0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x72, 0x61, 0x6b, 0x65, 0x74, 0x61, 0x2e, 0x53, 0x69,
@@ -734,20 +738,20 @@ var file_bot_proto_rawDesc = []byte{
 }
 
 var (
-	file_bot_proto_rawDescOnce sync.Once
-	file_bot_proto_rawDescData = file_bot_proto_rawDesc
+	file_raketa_proto_rawDescOnce sync.Once
+	file_raketa_proto_rawDescData = file_raketa_proto_rawDesc
 )
 
-func file_bot_proto_rawDescGZIP() []byte {
-	file_bot_proto_rawDescOnce.Do(func() {
-		file_bot_proto_rawDescData = protoimpl.X.CompressGZIP(file_bot_proto_rawDescData)
+func file_raketa_proto_rawDescGZIP() []byte {
+	file_raketa_proto_rawDescOnce.Do(func() {
+		file_raketa_proto_rawDescData = protoimpl.X.CompressGZIP(file_raketa_proto_rawDescData)
 	})
-	return file_bot_proto_rawDescData
+	return file_raketa_proto_rawDescData
 }
 
-var file_bot_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_bot_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
-var file_bot_proto_goTypes = []interface{}{
+var file_raketa_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_raketa_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_raketa_proto_goTypes = []interface{}{
 	(Task_Status)(0),             // 0: raketa.Task.Status
 	(*SignUpRequest)(nil),        // 1: raketa.SignUpRequest
 	(*SignUpResponse)(nil),       // 2: raketa.SignUpResponse
@@ -763,7 +767,7 @@ var file_bot_proto_goTypes = []interface{}{
 	(*GetOpenTasksResponse)(nil), // 12: raketa.GetOpenTasksResponse
 	(*Task)(nil),                 // 13: raketa.Task
 }
-var file_bot_proto_depIdxs = []int32{
+var file_raketa_proto_depIdxs = []int32{
 	13, // 0: raketa.GetOpenTasksResponse.tasks:type_name -> raketa.Task
 	0,  // 1: raketa.Task.status:type_name -> raketa.Task.Status
 	1,  // 2: raketa.RaketaService.SignUp:input_type -> raketa.SignUpRequest
@@ -785,13 +789,13 @@ var file_bot_proto_depIdxs = []int32{
 	0,  // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_bot_proto_init() }
-func file_bot_proto_init() {
-	if File_bot_proto != nil {
+func init() { file_raketa_proto_init() }
+func file_raketa_proto_init() {
+	if File_raketa_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_bot_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SignUpRequest); i {
 			case 0:
 				return &v.state
@@ -803,7 +807,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SignUpResponse); i {
 			case 0:
 				return &v.state
@@ -815,7 +819,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CreateTaskRequest); i {
 			case 0:
 				return &v.state
@@ -827,7 +831,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CreateTaskResponse); i {
 			case 0:
 				return &v.state
@@ -839,7 +843,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteTaskRequest); i {
 			case 0:
 				return &v.state
@@ -851,7 +855,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteTaskResponse); i {
 			case 0:
 				return &v.state
@@ -863,7 +867,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AssignUserRequest); i {
 			case 0:
 				return &v.state
@@ -875,7 +879,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AssignUserResponse); i {
 			case 0:
 				return &v.state
@@ -887,7 +891,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CloseTaskRequest); i {
 			case 0:
 				return &v.state
@@ -899,7 +903,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CloseTaskResponse); i {
 			case 0:
 				return &v.state
@@ -911,7 +915,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetOpenTasksRequest); i {
 			case 0:
 				return &v.state
@@ -923,7 +927,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetOpenTasksResponse); i {
 			case 0:
 				return &v.state
@@ -935,7 +939,7 @@ func file_bot_proto_init() {
 				return nil
 			}
 		}
-		file_bot_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_raketa_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Task); i {
 			case 0:
 				return &v.state
@@ -952,19 +956,19 @@ func file_bot_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_bot_proto_rawDesc,
+			RawDescriptor: file_raketa_proto_rawDesc,
 			NumEnums:      1,
 			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_bot_proto_goTypes,
-		DependencyIndexes: file_bot_proto_depIdxs,
-		EnumInfos:         file_bot_proto_enumTypes,
-		MessageInfos:      file_bot_proto_msgTypes,
+		GoTypes:           file_raketa_proto_goTypes,
+		DependencyIndexes: file_raketa_proto_depIdxs,
+		EnumInfos:         file_raketa_proto_enumTypes,
+		MessageInfos:      file_raketa_proto_msgTypes,
 	}.Build()
-	File_bot_proto = out.File
-	file_bot_proto_rawDesc = nil
-	file_bot_proto_goTypes = nil
-	file_bot_proto_depIdxs = nil
+	File_raketa_proto = out.File
+	file_raketa_proto_rawDesc = nil
+	file_raketa_proto_goTypes = nil
+	file_raketa_proto_depIdxs = nil
 }

@@ -16,18 +16,18 @@ type storage interface {
 	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
 }
 
-type BotService struct {
+type Service struct {
 	proto.UnimplementedRaketaServiceServer
 	storage storage
 }
 
-func NewBotService(storage storage) *BotService {
-	return &BotService{
+func NewBotService(storage storage) *Service {
+	return &Service{
 		storage: storage,
 	}
 }
 
-func (s *BotService) SignUp(ctx context.Context, req *proto.SignUpRequest) (*proto.SignUpResponse, error) {
+func (s *Service) SignUp(ctx context.Context, req *proto.SignUpRequest) (*proto.SignUpResponse, error) {
 	if err := s.storage.CreateUser(ctx, &types.User{
 		ID: req.Id,
 	}); err != nil {
@@ -37,7 +37,7 @@ func (s *BotService) SignUp(ctx context.Context, req *proto.SignUpRequest) (*pro
 	return &proto.SignUpResponse{}, nil
 }
 
-func (s *BotService) CreateTask(ctx context.Context, req *proto.CreateTaskRequest) (*proto.CreateTaskResponse, error) {
+func (s *Service) CreateTask(ctx context.Context, req *proto.CreateTaskRequest) (*proto.CreateTaskResponse, error) {
 	t := &types.Task{
 		Url:    req.Url,
 		Status: types.Open,
@@ -50,7 +50,7 @@ func (s *BotService) CreateTask(ctx context.Context, req *proto.CreateTaskReques
 	return &proto.CreateTaskResponse{}, nil
 }
 
-func (s *BotService) DeleteTask(ctx context.Context, req *proto.DeleteTaskRequest) (*proto.DeleteTaskResponse, error) {
+func (s *Service) DeleteTask(ctx context.Context, req *proto.DeleteTaskRequest) (*proto.DeleteTaskResponse, error) {
 	if err := s.storage.DeleteTask(ctx, &types.Task{
 		Url: req.Url,
 	}); err != nil {
@@ -60,7 +60,7 @@ func (s *BotService) DeleteTask(ctx context.Context, req *proto.DeleteTaskReques
 	return &proto.DeleteTaskResponse{}, nil
 }
 
-func (s *BotService) AssignUser(ctx context.Context, req *proto.AssignUserRequest) (*proto.AssignUserResponse, error) {
+func (s *Service) AssignUser(ctx context.Context, req *proto.AssignUserRequest) (*proto.AssignUserResponse, error) {
 	if err := s.storage.AssignUser(ctx, &types.AssignUserRequest{
 		Url:    req.Url,
 		UserID: &req.UserId,
@@ -71,7 +71,7 @@ func (s *BotService) AssignUser(ctx context.Context, req *proto.AssignUserReques
 	return &proto.AssignUserResponse{}, nil
 }
 
-func (s *BotService) CloseTask(ctx context.Context, req *proto.CloseTaskRequest) (*proto.CloseTaskResponse, error) {
+func (s *Service) CloseTask(ctx context.Context, req *proto.CloseTaskRequest) (*proto.CloseTaskResponse, error) {
 	if err := s.storage.CloseTask(ctx, &types.CloseTaskRequest{
 		Url: req.Url,
 	}); err != nil {
@@ -81,7 +81,7 @@ func (s *BotService) CloseTask(ctx context.Context, req *proto.CloseTaskRequest)
 	return &proto.CloseTaskResponse{}, nil
 }
 
-func (s *BotService) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksRequest) (*proto.GetOpenTasksResponse, error) {
+func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksRequest) (*proto.GetOpenTasksResponse, error) {
 	tasks, err := s.storage.GetOpenTasks(ctx)
 	if err != nil {
 		return nil, err
@@ -97,20 +97,14 @@ func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 	tasksProto := []*proto.Task{}
 
 	for _, task := range tasks {
-		if task.UserID == nil {
-			taskProto := &proto.Task{
-				Url:    task.Url,
-				Status: converStatusToProto(task.Status),
-			}
-			tasksProto = append(tasksProto, taskProto)
-		} else {
-			taskProto := &proto.Task{
-				Url:    task.Url,
-				UserId: *task.UserID,
-				Status: converStatusToProto(task.Status),
-			}
-			tasksProto = append(tasksProto, taskProto)
+		taskProto := &proto.Task{
+			Url:    task.Url,
+			Status: converStatusToProto(task.Status),
 		}
+		if task.UserID != nil {
+			taskProto.UserId = *task.UserID
+		}
+		tasksProto = append(tasksProto, taskProto)
 	}
 
 	return tasksProto
@@ -118,11 +112,13 @@ func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 
 func converStatusToProto(status types.Status) proto.Task_Status {
 	switch status {
-	case "open":
+	case types.Open:
 		return proto.Task_OPEN
-	case "closed":
+	case types.Closed:
 		return proto.Task_CLOSED
-	default:
+	case types.Declined:
 		return proto.Task_DECLINED
+	default:
+		return proto.Task_UNKNOWN
 	}
 }

@@ -82,9 +82,10 @@ message GetOpenTasksResponse {
 
 message Task {
     enum Status {
-        OPEN = 0;
-        CLOSED = 1;
-        DECLINED = 2;
+        UNKNOWN = 0;
+        OPEN = 1;
+        CLOSED = 2;
+        DECLINED = 3;
     }
     string url = 1;
     int64 user_id = 2;
