@@ -32,6 +32,8 @@ func Test_DB(t *testing.T) {
 	closeTask(ctx, t, storage)
 
 	getOpenTasks(ctx, t, storage)
+
+	setTaskPrice(ctx, t, storage)
 }
 
 func createUser(ctx context.Context, t *testing.T, storage *Storage) {
@@ -191,6 +193,35 @@ func getOpenTasks(ctx context.Context, t *testing.T, storage *Storage) {
 	require.Contains(t, tasks, taskOpen1)
 	require.Contains(t, tasks, taskOpen2)
 	require.NotContains(t, tasks, taskClosed)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+}
+
+func setTaskPrice(ctx context.Context, t *testing.T, storage *Storage) {
+	task := &types.Task{
+		Url:    randomURL(),
+		Status: types.Open,
+	}
+
+	err := storage.CreateTask(ctx, task)
+	require.NoError(t, err)
+
+	req := &types.SetTaskPriceRequest{
+		Url:   task.Url,
+		Price: uint64(randomId()),
+	}
+
+	err = storage.SetTaskPrice(ctx, req)
+	require.NoError(t, err)
+
+	var exists bool
+	query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1 AND price = $2)`
+	err = storage.db.QueryRow(ctx, query, req.Url, req.Price).Scan(&exists)
+	if err != nil {
+		require.Error(t, err)
+	}
+	require.True(t, exists)
+	require.NoError(t, err)
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 }

@@ -27,3 +27,8 @@ type AssignUserRequest struct {
 type CloseTaskRequest struct {
 	Url string `json:"url"`
 }
+
+type SetTaskPriceRequest struct {
+	Url    string `json:"url"`
+	Price  uint64 `json:"price"`
+}

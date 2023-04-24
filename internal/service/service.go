@@ -21,6 +21,7 @@ type storage interface {
 	CloseTask(ctx context.Context, req *types.CloseTaskRequest) error
 	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
 	CheckUser(ctx context.Context, user *types.User) (bool, error)
+	SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error
 }
 
 type Service struct {
@@ -126,6 +127,17 @@ func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest
 	}, nil
 }
 
+func (s *Service) SetTaskPrice(ctx context.Context, req *proto.SetTaskPriceRequest) (*proto.SetTaskPriceResponse, error) {
+	if err := s.storage.SetTaskPrice(ctx, &types.SetTaskPriceRequest{
+		Url:   req.Url,
+		Price: req.Price,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &proto.SetTaskPriceResponse{}, nil
+}
+
 func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 	tasksProto := []*proto.Task{}
 
@@ -133,6 +145,7 @@ func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 		taskProto := &proto.Task{
 			Url:    task.Url,
 			Status: converStatusToProto(task.Status),
+			Price:  task.Price,
 		}
 		if task.UserID != nil {
 			taskProto.UserId = *task.UserID

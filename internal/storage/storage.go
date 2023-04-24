@@ -109,3 +109,14 @@ func (s *Storage) CheckUser(ctx context.Context, user *types.User) (bool, error)
 	}
 	return true, nil
 }
+
+func (s *Storage) SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error {
+	query := `UPDATE tasks
+			SET price = $1
+			WHERE url = $2`
+	_, err := s.db.Exec(ctx, query, req.Price, req.Url)
+	if err != nil {
+		return err
+	}
+	return nil
+}
