@@ -38,7 +38,7 @@ func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
 }
 
 func (s *Storage) CreateTask(ctx context.Context, task *types.Task) error {
-	query := `INSERT INTO tasks (url, assigned_id, status) VALUES ($1, NULL, $2)`
+	query := `INSERT INTO tasks (url, assigned_id, status, price) VALUES ($1, NULL, $2, 0)`
 	_, err := s.db.Exec(ctx, query, task.Url, task.Status)
 	if err != nil {
 		return err
@@ -88,7 +88,7 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 	tasks := []*types.Task{}
 	for rows.Next() {
 		task := &types.Task{}
-		if err := rows.Scan(&task.Url, &task.UserID, &task.Status); err != nil {
+		if err := rows.Scan(&task.Url, &task.UserID, &task.Status, &task.Price); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)

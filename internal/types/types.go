@@ -16,6 +16,7 @@ type Task struct {
 	Url    string `json:"url"`
 	Status Status `json:"status"`
 	UserID *int64 `json:"id"`
+	Price  uint64 `json:"price"`
 }
 
 type AssignUserRequest struct {
