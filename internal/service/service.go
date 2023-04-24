@@ -2,9 +2,15 @@ package service
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/vanyaio/raketa-backend/internal/types"
+	"github.com/vanyaio/raketa-backend/pkg/utils"
 	proto "github.com/vanyaio/raketa-backend/proto"
+)
+
+const (
+	adminRole = "ADMIN_RAKETA"
 )
 
 type storage interface {
@@ -14,6 +20,7 @@ type storage interface {
 	AssignUser(ctx context.Context, req *types.AssignUserRequest) error
 	CloseTask(ctx context.Context, req *types.CloseTaskRequest) error
 	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
+	CheckUser(ctx context.Context, user *types.User) (bool, error)
 }
 
 type Service struct {
@@ -89,6 +96,33 @@ func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksReque
 
 	return &proto.GetOpenTasksResponse{
 		Tasks: convertTasksToProto(tasks),
+	}, nil
+}
+
+func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest) (*proto.GetUserRoleResponse, error) {
+	value, err := utils.ChekAdminRole(adminRole)
+	if err != nil {
+		return nil, err
+	}
+	id, err := strconv.Atoi(value)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := s.storage.CheckUser(ctx, &types.User{
+		ID: req.UserId,
+	})
+	if ok == false || err != nil {
+		return &proto.GetUserRoleResponse{
+			Role: proto.GetUserRoleResponse_UNKNOWN,
+		}, err
+	}
+	if req.UserId == int64(id) {
+		return &proto.GetUserRoleResponse{
+			Role: proto.GetUserRoleResponse_ADMIN,
+		}, nil
+	}
+	return &proto.GetUserRoleResponse{
+		Role: proto.GetUserRoleResponse_REGULAR,
 	}, nil
 }
 

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -97,4 +98,14 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 		return nil, err
 	}
 	return tasks, nil
+}
+
+func (s *Storage) CheckUser(ctx context.Context, user *types.User) (bool, error) {
+	var exists bool
+	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1)`
+	_ = s.db.QueryRow(ctx, query, user.ID).Scan(&exists)
+	if exists == false {
+		return false, errors.New("User doesn't exists")
+	}
+	return true, nil
 }

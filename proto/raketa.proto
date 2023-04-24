@@ -15,7 +15,7 @@ service RaketaService {
     };
     rpc GetUserRole(GetUserRoleRequest) returns (GetUserRoleResponse) {
         option (google.api.http) = {
-            get: "/users/role"
+            get: "/users/role/{user_id}"
         };
     };
     rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {
