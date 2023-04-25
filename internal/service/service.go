@@ -112,7 +112,7 @@ func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest
 	ok, err := s.storage.CheckUser(ctx, &types.User{
 		ID: req.UserId,
 	})
-	if ok == false || err != nil {
+	if !ok || err != nil {
 		return &proto.GetUserRoleResponse{
 			Role: proto.GetUserRoleResponse_UNKNOWN,
 		}, err
