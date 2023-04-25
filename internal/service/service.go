@@ -37,7 +37,8 @@ func NewBotService(storage storage) *Service {
 
 func (s *Service) SignUp(ctx context.Context, req *proto.SignUpRequest) (*proto.SignUpResponse, error) {
 	if err := s.storage.CreateUser(ctx, &types.User{
-		ID: req.Id,
+		ID:       req.Id,
+		Username: req.Username,
 	}); err != nil {
 		return nil, err
 	}
@@ -70,8 +71,8 @@ func (s *Service) DeleteTask(ctx context.Context, req *proto.DeleteTaskRequest) 
 
 func (s *Service) AssignUser(ctx context.Context, req *proto.AssignUserRequest) (*proto.AssignUserResponse, error) {
 	if err := s.storage.AssignUser(ctx, &types.AssignUserRequest{
-		Url:    req.Url,
-		UserID: &req.UserId,
+		Url:      req.Url,
+		Username: req.Username,
 	}); err != nil {
 		return nil, err
 	}

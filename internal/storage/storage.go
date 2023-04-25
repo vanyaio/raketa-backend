@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/jackc/pgx/v5"
@@ -30,8 +31,8 @@ func NewStorage(db pgxIface) *Storage {
 }
 
 func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
-	query := `INSERT INTO users (id) VALUES ($1)`
-	_, err := s.db.Exec(ctx, query, user.ID)
+	query := `INSERT INTO users (id, telegram_username) VALUES ($1, $2)`
+	_, err := s.db.Exec(ctx, query, user.ID, user.Username)
 	if err != nil {
 		return err
 	}
@@ -57,10 +58,17 @@ func (s *Storage) DeleteTask(ctx context.Context, task *types.Task) error {
 }
 
 func (s *Storage) AssignUser(ctx context.Context, req *types.AssignUserRequest) error {
+	var id *int64
+	if err := s.db.QueryRow(ctx, `SELECT id FROM users WHERE telegram_username = $1`, req.Username).Scan(&id); err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("user not found")
+		}
+		return err
+	}
 	query := `UPDATE tasks
 		SET assigned_id = COALESCE($1, assigned_id)
 		WHERE url = $2`
-	_, err := s.db.Exec(ctx, query, req.UserID, req.Url)
+	_, err := s.db.Exec(ctx, query, id, req.Url)
 	if err != nil {
 		return err
 	}

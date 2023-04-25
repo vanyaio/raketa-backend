@@ -38,15 +38,16 @@ func Test_DB(t *testing.T) {
 
 func createUser(ctx context.Context, t *testing.T, storage *Storage) {
 	u := &types.User{
-		ID: int64(randomId()),
+		ID:       int64(randomId()),
+		Username: randomURL(),
 	}
 
 	err := storage.CreateUser(ctx, u)
 	require.NoError(t, err)
 
 	var exists bool
-	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1)`
-	err = storage.db.QueryRow(ctx, query, u.ID).Scan(&exists)
+	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username = $2)`
+	err = storage.db.QueryRow(ctx, query, u.ID, u.Username).Scan(&exists)
 	if err != nil {
 		require.Error(t, err)
 	}
@@ -101,7 +102,8 @@ func deleteTask(ctx context.Context, t *testing.T, storage *Storage) {
 
 func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
 	u := &types.User{
-		ID: int64(randomId()),
+		ID:       int64(randomId()),
+		Username: randomURL(),
 	}
 
 	err := storage.CreateUser(ctx, u)
@@ -116,8 +118,8 @@ func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
 	require.NoError(t, err)
 
 	req := &types.AssignUserRequest{
-		Url:    task.Url,
-		UserID: &u.ID,
+		Url:      task.Url,
+		Username: u.Username,
 	}
 
 	err = storage.AssignUser(ctx, req)
