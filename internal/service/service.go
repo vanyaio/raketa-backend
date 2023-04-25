@@ -2,9 +2,15 @@ package service
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/vanyaio/raketa-backend/internal/types"
+	"github.com/vanyaio/raketa-backend/pkg/utils"
 	proto "github.com/vanyaio/raketa-backend/proto"
+)
+
+const (
+	adminRole = "ADMIN_RAKETA"
 )
 
 type storage interface {
@@ -14,6 +20,8 @@ type storage interface {
 	AssignUser(ctx context.Context, req *types.AssignUserRequest) error
 	CloseTask(ctx context.Context, req *types.CloseTaskRequest) error
 	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
+	CheckUser(ctx context.Context, user *types.User) (bool, error)
+	SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error
 }
 
 type Service struct {
@@ -92,6 +100,44 @@ func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksReque
 	}, nil
 }
 
+func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest) (*proto.GetUserRoleResponse, error) {
+	value, err := utils.CheckAdminRole(adminRole)
+	if err != nil {
+		return nil, err
+	}
+	id, err := strconv.Atoi(value)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := s.storage.CheckUser(ctx, &types.User{
+		ID: req.UserId,
+	})
+	if !ok || err != nil {
+		return &proto.GetUserRoleResponse{
+			Role: proto.GetUserRoleResponse_UNKNOWN,
+		}, err
+	}
+	if req.UserId == int64(id) {
+		return &proto.GetUserRoleResponse{
+			Role: proto.GetUserRoleResponse_ADMIN,
+		}, nil
+	}
+	return &proto.GetUserRoleResponse{
+		Role: proto.GetUserRoleResponse_REGULAR,
+	}, nil
+}
+
+func (s *Service) SetTaskPrice(ctx context.Context, req *proto.SetTaskPriceRequest) (*proto.SetTaskPriceResponse, error) {
+	if err := s.storage.SetTaskPrice(ctx, &types.SetTaskPriceRequest{
+		Url:   req.Url,
+		Price: req.Price,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &proto.SetTaskPriceResponse{}, nil
+}
+
 func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 	tasksProto := []*proto.Task{}
 
@@ -99,6 +145,7 @@ func convertTasksToProto(tasks []*types.Task) []*proto.Task {
 		taskProto := &proto.Task{
 			Url:    task.Url,
 			Status: converStatusToProto(task.Status),
+			Price:  task.Price,
 		}
 		if task.UserID != nil {
 			taskProto.UserId = *task.UserID

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -38,7 +39,7 @@ func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
 }
 
 func (s *Storage) CreateTask(ctx context.Context, task *types.Task) error {
-	query := `INSERT INTO tasks (url, assigned_id, status) VALUES ($1, NULL, $2)`
+	query := `INSERT INTO tasks (url, assigned_id, status, price) VALUES ($1, NULL, $2, 0)`
 	_, err := s.db.Exec(ctx, query, task.Url, task.Status)
 	if err != nil {
 		return err
@@ -88,7 +89,7 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 	tasks := []*types.Task{}
 	for rows.Next() {
 		task := &types.Task{}
-		if err := rows.Scan(&task.Url, &task.UserID, &task.Status); err != nil {
+		if err := rows.Scan(&task.Url, &task.UserID, &task.Status, &task.Price); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)
@@ -97,4 +98,25 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 		return nil, err
 	}
 	return tasks, nil
+}
+
+func (s *Storage) CheckUser(ctx context.Context, user *types.User) (bool, error) {
+	var exists bool
+	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1)`
+	_ = s.db.QueryRow(ctx, query, user.ID).Scan(&exists)
+	if !exists {
+		return false, errors.New("User doesn't exists")
+	}
+	return true, nil
+}
+
+func (s *Storage) SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error {
+	query := `UPDATE tasks
+			SET price = $1
+			WHERE url = $2`
+	_, err := s.db.Exec(ctx, query, req.Price, req.Url)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -13,6 +13,11 @@ service RaketaService {
             body: "*"
         };
     };
+    rpc GetUserRole(GetUserRoleRequest) returns (GetUserRoleResponse) {
+        option (google.api.http) = {
+            get: "/users/role/{user_id}"
+        };
+    };
     rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {
         option (google.api.http) = {
             post: "/tasks/create"
@@ -41,6 +46,12 @@ service RaketaService {
             get: "/tasks/open"
         };
     };
+    rpc SetTaskPrice(SetTaskPriceRequest) returns (SetTaskPriceResponse) {
+        option (google.api.http) = {
+            patch: "/tasks/price"
+            body: "*"
+        };
+    };
 }
 
 message SignUpRequest{
@@ -48,6 +59,19 @@ message SignUpRequest{
 }
 
 message SignUpResponse {}
+
+message GetUserRoleRequest {
+    int64 user_id = 1;
+}
+
+message GetUserRoleResponse {
+    enum Role {
+        UNKNOWN = 0;
+        REGULAR = 1;
+        ADMIN = 2;
+    }
+    Role role = 1;
+}
 
 message CreateTaskRequest {
     string url = 1;
@@ -90,4 +114,12 @@ message Task {
     string url = 1;
     int64 user_id = 2;
     Status status = 3;
+    uint64 price = 4;
 }
+
+message SetTaskPriceRequest {
+    string url = 1;
+    uint64 price = 2;
+}
+
+message SetTaskPriceResponse {}

@@ -25,6 +25,7 @@ require (
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jackc/pgx/v5 v5.3.1
+	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
