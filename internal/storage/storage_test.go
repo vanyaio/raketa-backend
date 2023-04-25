@@ -34,6 +34,8 @@ func Test_DB(t *testing.T) {
 	getOpenTasks(ctx, t, storage)
 
 	setTaskPrice(ctx, t, storage)
+
+	getUserTasks(ctx, t , storage)
 }
 
 func createUser(ctx context.Context, t *testing.T, storage *Storage) {
@@ -224,6 +226,58 @@ func setTaskPrice(ctx context.Context, t *testing.T, storage *Storage) {
 	}
 	require.True(t, exists)
 	require.NoError(t, err)
+
+	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+}
+
+func getUserTasks(ctx context.Context, t *testing.T, storage *Storage) {
+	u := &types.User{
+		ID:       int64(randomId()),
+		Username: randomURL(),
+	}
+
+	err := storage.CreateUser(ctx, u)
+	require.NoError(t, err)
+
+	taskClosed := &types.Task{
+		Url:    randomURL() + fmt.Sprintf("1"),
+		Status: types.Open,
+	}
+
+	taskOpen := &types.Task{
+		Url:    randomURL()+ fmt.Sprintf("2"),
+		Status: types.Open,
+	}
+
+	err = storage.CreateTask(ctx, taskClosed)
+	require.NoError(t, err)
+
+	err = storage.CreateTask(ctx, taskOpen)
+	require.NoError(t, err)
+
+	reqClosed := &types.AssignUserRequest{
+		Url:      taskClosed.Url,
+		Username: u.Username,
+	}
+
+	reqOpen := &types.AssignUserRequest{
+		Url:      taskOpen.Url,
+		Username: u.Username,
+	}
+
+	err = storage.AssignUser(ctx, reqClosed)
+	require.NoError(t, err)
+
+	err = storage.AssignUser(ctx, reqOpen)
+	require.NoError(t, err)
+
+	err = storage.CloseTask(ctx, &types.CloseTaskRequest{
+		Url: reqClosed.Url,
+	})
+
+	tasksCount, err := storage.GetUserStats(ctx, u)
+	require.NoError(t, err)
+	require.Equal(t, tasksCount, int64(1))
 
 	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 }

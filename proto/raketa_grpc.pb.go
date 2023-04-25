@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	RaketaService_SignUp_FullMethodName       = "/raketa.RaketaService/SignUp"
 	RaketaService_GetUserRole_FullMethodName  = "/raketa.RaketaService/GetUserRole"
+	RaketaService_GetUserStats_FullMethodName = "/raketa.RaketaService/GetUserStats"
 	RaketaService_CreateTask_FullMethodName   = "/raketa.RaketaService/CreateTask"
 	RaketaService_DeleteTask_FullMethodName   = "/raketa.RaketaService/DeleteTask"
 	RaketaService_AssignUser_FullMethodName   = "/raketa.RaketaService/AssignUser"
@@ -35,6 +36,7 @@ const (
 type RaketaServiceClient interface {
 	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
 	GetUserRole(ctx context.Context, in *GetUserRoleRequest, opts ...grpc.CallOption) (*GetUserRoleResponse, error)
+	GetUserStats(ctx context.Context, in *GetUserStatsRequest, opts ...grpc.CallOption) (*GetUserStatsResponse, error)
 	CreateTask(ctx context.Context, in *CreateTaskRequest, opts ...grpc.CallOption) (*CreateTaskResponse, error)
 	DeleteTask(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteTaskResponse, error)
 	AssignUser(ctx context.Context, in *AssignUserRequest, opts ...grpc.CallOption) (*AssignUserResponse, error)
@@ -63,6 +65,15 @@ func (c *raketaServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opt
 func (c *raketaServiceClient) GetUserRole(ctx context.Context, in *GetUserRoleRequest, opts ...grpc.CallOption) (*GetUserRoleResponse, error) {
 	out := new(GetUserRoleResponse)
 	err := c.cc.Invoke(ctx, RaketaService_GetUserRole_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *raketaServiceClient) GetUserStats(ctx context.Context, in *GetUserStatsRequest, opts ...grpc.CallOption) (*GetUserStatsResponse, error) {
+	out := new(GetUserStatsResponse)
+	err := c.cc.Invoke(ctx, RaketaService_GetUserStats_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -129,6 +140,7 @@ func (c *raketaServiceClient) SetTaskPrice(ctx context.Context, in *SetTaskPrice
 type RaketaServiceServer interface {
 	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
 	GetUserRole(context.Context, *GetUserRoleRequest) (*GetUserRoleResponse, error)
+	GetUserStats(context.Context, *GetUserStatsRequest) (*GetUserStatsResponse, error)
 	CreateTask(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error)
 	DeleteTask(context.Context, *DeleteTaskRequest) (*DeleteTaskResponse, error)
 	AssignUser(context.Context, *AssignUserRequest) (*AssignUserResponse, error)
@@ -147,6 +159,9 @@ func (UnimplementedRaketaServiceServer) SignUp(context.Context, *SignUpRequest) 
 }
 func (UnimplementedRaketaServiceServer) GetUserRole(context.Context, *GetUserRoleRequest) (*GetUserRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRole not implemented")
+}
+func (UnimplementedRaketaServiceServer) GetUserStats(context.Context, *GetUserStatsRequest) (*GetUserStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserStats not implemented")
 }
 func (UnimplementedRaketaServiceServer) CreateTask(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTask not implemented")
@@ -211,6 +226,24 @@ func _RaketaService_GetUserRole_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RaketaServiceServer).GetUserRole(ctx, req.(*GetUserRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RaketaService_GetUserStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RaketaServiceServer).GetUserStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RaketaService_GetUserStats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RaketaServiceServer).GetUserStats(ctx, req.(*GetUserStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -337,6 +370,10 @@ var RaketaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserRole",
 			Handler:    _RaketaService_GetUserRole_Handler,
+		},
+		{
+			MethodName: "GetUserStats",
+			Handler:    _RaketaService_GetUserStats_Handler,
 		},
 		{
 			MethodName: "CreateTask",

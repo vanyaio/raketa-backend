@@ -18,6 +18,11 @@ service RaketaService {
             get: "/users/role/{user_id}"
         };
     };
+    rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {
+        option (google.api.http) = {
+            get: "/users/stats/{user_id}"
+        };
+    };
     rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {
         option (google.api.http) = {
             post: "/tasks/create"
@@ -72,6 +77,14 @@ message GetUserRoleResponse {
         ADMIN = 2;
     }
     Role role = 1;
+}
+
+message GetUserStatsRequest {
+    int64 user_id = 1;
+}
+
+message GetUserStatsResponse {
+    int64 tasks = 1;
 }
 
 message CreateTaskRequest {

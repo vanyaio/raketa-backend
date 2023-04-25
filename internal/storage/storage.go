@@ -128,3 +128,15 @@ func (s *Storage) SetTaskPrice(ctx context.Context, req *types.SetTaskPriceReque
 	}
 	return nil
 }
+
+func (s *Storage) GetUserStats(ctx context.Context, user *types.User) (int64, error) {
+	var tasksCount int64
+	query := `SELECT COUNT(*) FROM tasks WHERE assigned_id = $1 AND status = 'closed'`
+	if err := s.db.QueryRow(ctx, query, user.ID).Scan(&tasksCount); err != nil {
+		if err == sql.ErrNoRows {
+			return 0, errors.New("user not found")
+		}
+		return 0, err
+	}
+	return tasksCount, nil
+}
