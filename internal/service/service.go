@@ -101,7 +101,7 @@ func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksReque
 }
 
 func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest) (*proto.GetUserRoleResponse, error) {
-	value, err := utils.ChekAdminRole(adminRole)
+	value, err := utils.CheckAdminRole(adminRole)
 	if err != nil {
 		return nil, err
 	}
