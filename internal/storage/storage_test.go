@@ -105,8 +105,8 @@ func deleteTask(ctx context.Context, t *testing.T, storage *Storage) {
 
 func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
 	t.Parallel()
-	
-	t.Run("user exist", func(t *testing.T) {
+
+	t.Run("user exists", func(t *testing.T) {
 		u := &types.User{
 			ID:       int64(randomId()),
 			Username: randomURL(),
@@ -143,7 +143,7 @@ func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
 		storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
 	})
 	
-	t.Run("user don't exist", func(t *testing.T) {
+	t.Run("user doesn't exists", func(t *testing.T) {
 		u := &types.User{
 			ID:       int64(randomId()),
 			Username: randomURL(),
@@ -261,7 +261,7 @@ func setTaskPrice(ctx context.Context, t *testing.T, storage *Storage) {
 }
 
 func getUserTasks(ctx context.Context, t *testing.T, storage *Storage) {
-	t.Run("user exist", func(t *testing.T) {
+	t.Run("user exists", func(t *testing.T) {
 		
 	})
 	u := &types.User{
