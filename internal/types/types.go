@@ -1,7 +1,8 @@
 package types
 
 type User struct {
-	ID int64 `json:"id"`
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
 }
 
 type Status string
@@ -20,8 +21,8 @@ type Task struct {
 }
 
 type AssignUserRequest struct {
-	Url    string `json:"url"`
-	UserID *int64 `json:"id"`
+	Url      string `json:"url"`
+	Username string `json:"username"`
 }
 
 type CloseTaskRequest struct {
@@ -29,6 +30,6 @@ type CloseTaskRequest struct {
 }
 
 type SetTaskPriceRequest struct {
-	Url    string `json:"url"`
-	Price  uint64 `json:"price"`
+	Url   string `json:"url"`
+	Price uint64 `json:"price"`
 }

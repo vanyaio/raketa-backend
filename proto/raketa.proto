@@ -18,6 +18,11 @@ service RaketaService {
             get: "/users/role/{user_id}"
         };
     };
+    rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {
+        option (google.api.http) = {
+            get: "/users/stats/{user_id}"
+        };
+    };
     rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {
         option (google.api.http) = {
             post: "/tasks/create"
@@ -56,6 +61,7 @@ service RaketaService {
 
 message SignUpRequest{
     int64 id = 1;
+    string username = 2;
 }
 
 message SignUpResponse {}
@@ -73,6 +79,14 @@ message GetUserRoleResponse {
     Role role = 1;
 }
 
+message GetUserStatsRequest {
+    int64 user_id = 1;
+}
+
+message GetUserStatsResponse {
+    int64 closed_tasks_count = 1;
+}
+
 message CreateTaskRequest {
     string url = 1;
 }
@@ -87,7 +101,7 @@ message DeleteTaskResponse {}
 
 message AssignUserRequest {
     string url = 1;
-    int64 user_id = 2;
+    string username = 2;
 }
 
 message AssignUserResponse {}

@@ -41,7 +41,7 @@ migrate-up:
 	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketadb?sslmode=disable" up
 
 migrate-down:
-	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketadb?sslmode=disable" down
+	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketadb?sslmode=disable" down ${version}
 
 evans:
 	evans -r repl -p 50052

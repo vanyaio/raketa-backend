@@ -22,6 +22,7 @@ type storage interface {
 	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
 	CheckUser(ctx context.Context, user *types.User) (bool, error)
 	SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error
+	GetUserStats(ctx context.Context, user *types.User) (int64, error)
 }
 
 type Service struct {
@@ -37,7 +38,8 @@ func NewBotService(storage storage) *Service {
 
 func (s *Service) SignUp(ctx context.Context, req *proto.SignUpRequest) (*proto.SignUpResponse, error) {
 	if err := s.storage.CreateUser(ctx, &types.User{
-		ID: req.Id,
+		ID:       req.Id,
+		Username: req.Username,
 	}); err != nil {
 		return nil, err
 	}
@@ -70,8 +72,8 @@ func (s *Service) DeleteTask(ctx context.Context, req *proto.DeleteTaskRequest) 
 
 func (s *Service) AssignUser(ctx context.Context, req *proto.AssignUserRequest) (*proto.AssignUserResponse, error) {
 	if err := s.storage.AssignUser(ctx, &types.AssignUserRequest{
-		Url:    req.Url,
-		UserID: &req.UserId,
+		Url:      req.Url,
+		Username: req.Username,
 	}); err != nil {
 		return nil, err
 	}
@@ -136,6 +138,18 @@ func (s *Service) SetTaskPrice(ctx context.Context, req *proto.SetTaskPriceReque
 	}
 
 	return &proto.SetTaskPriceResponse{}, nil
+}
+
+func (s *Service) GetUserStats(ctx context.Context, req *proto.GetUserStatsRequest) (*proto.GetUserStatsResponse, error) {
+	tasksCount, err := s.storage.GetUserStats(ctx, &types.User{
+		ID:       req.UserId,
+	})
+	if err != nil {
+		return &proto.GetUserStatsResponse{}, err
+	}
+	return &proto.GetUserStatsResponse{
+		ClosedTasksCount: tasksCount,
+	}, nil
 }
 
 func convertTasksToProto(tasks []*types.Task) []*proto.Task {

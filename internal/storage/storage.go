@@ -30,8 +30,8 @@ func NewStorage(db pgxIface) *Storage {
 }
 
 func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
-	query := `INSERT INTO users (id) VALUES ($1)`
-	_, err := s.db.Exec(ctx, query, user.ID)
+	query := `INSERT INTO users (id, telegram_username) VALUES ($1, $2)`
+	_, err := s.db.Exec(ctx, query, user.ID, user.Username)
 	if err != nil {
 		return err
 	}
@@ -57,10 +57,17 @@ func (s *Storage) DeleteTask(ctx context.Context, task *types.Task) error {
 }
 
 func (s *Storage) AssignUser(ctx context.Context, req *types.AssignUserRequest) error {
+	var id *int64
+	if err := s.db.QueryRow(ctx, `SELECT id FROM users WHERE telegram_username = $1`, req.Username).Scan(&id); err != nil {
+		if err == pgx.ErrNoRows {
+			return pgx.ErrNoRows
+		}
+		return err
+	}
 	query := `UPDATE tasks
 		SET assigned_id = COALESCE($1, assigned_id)
 		WHERE url = $2`
-	_, err := s.db.Exec(ctx, query, req.UserID, req.Url)
+	_, err := s.db.Exec(ctx, query, id, req.Url)
 	if err != nil {
 		return err
 	}
@@ -119,4 +126,16 @@ func (s *Storage) SetTaskPrice(ctx context.Context, req *types.SetTaskPriceReque
 		return err
 	}
 	return nil
+}
+
+func (s *Storage) GetUserStats(ctx context.Context, user *types.User) (int64, error) {
+	var tasksCount int64
+	query := `SELECT COUNT(*) FROM tasks WHERE assigned_id = $1 AND status = 'closed'`
+	if err := s.db.QueryRow(ctx, query, user.ID).Scan(&tasksCount); err != nil {
+		if err == pgx.ErrNoRows {
+			return 0, pgx.ErrNoRows
+		}
+		return 0, err
+	}
+	return tasksCount, nil
 }
