@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/require"
 	"github.com/vanyaio/raketa-backend/internal/types"
 	"github.com/vanyaio/raketa-backend/pkg/db"
@@ -103,40 +104,69 @@ func deleteTask(ctx context.Context, t *testing.T, storage *Storage) {
 }
 
 func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
-	u := &types.User{
-		ID:       int64(randomId()),
-		Username: randomURL(),
-	}
+	t.Parallel()
+	
+	t.Run("user exist", func(t *testing.T) {
+		u := &types.User{
+			ID:       int64(randomId()),
+			Username: randomURL(),
+		}
+	
+		err := storage.CreateUser(ctx, u)
+		require.NoError(t, err)
+	
+		task := &types.Task{
+			Url:    randomURL(),
+			Status: types.Open,
+		}
+	
+		err = storage.CreateTask(ctx, task)
+		require.NoError(t, err)
+	
+		req := &types.AssignUserRequest{
+			Url:      task.Url,
+			Username: u.Username,
+		}
+	
+		err = storage.AssignUser(ctx, req)
+		require.NoError(t, err)
+	
+		var exists bool
+		query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1 AND assigned_id IS NOT NULL)`
+		err = storage.db.QueryRow(ctx, query, task.Url).Scan(&exists)
+		if err != nil {
+			require.Error(t, err)
+		}
+		require.True(t, exists)
+		require.NoError(t, err)
+	
+		storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	})
+	
+	t.Run("user don't exist", func(t *testing.T) {
+		u := &types.User{
+			ID:       int64(randomId()),
+			Username: randomURL(),
+		}
 
-	err := storage.CreateUser(ctx, u)
-	require.NoError(t, err)
+		task := &types.Task{
+			Url:    randomURL(),
+			Status: types.Open,
+		}
+	
+		err := storage.CreateTask(ctx, task)
+		require.NoError(t, err)
+	
+		req := &types.AssignUserRequest{
+			Url:      task.Url,
+			Username: u.Username,
+		}
+		
+		err = storage.AssignUser(ctx, req)
+		require.EqualError(t, err, pgx.ErrNoRows.Error())
 
-	task := &types.Task{
-		Url:    randomURL(),
-		Status: types.Open,
-	}
-
-	err = storage.CreateTask(ctx, task)
-	require.NoError(t, err)
-
-	req := &types.AssignUserRequest{
-		Url:      task.Url,
-		Username: u.Username,
-	}
-
-	err = storage.AssignUser(ctx, req)
-	require.NoError(t, err)
-
-	var exists bool
-	query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1 AND assigned_id IS NOT NULL)`
-	err = storage.db.QueryRow(ctx, query, task.Url).Scan(&exists)
-	if err != nil {
-		require.Error(t, err)
-	}
-	require.True(t, exists)
-	require.NoError(t, err)
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+		storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	})
 }
 
 func closeTask(ctx context.Context, t *testing.T, storage *Storage) {
@@ -231,6 +261,9 @@ func setTaskPrice(ctx context.Context, t *testing.T, storage *Storage) {
 }
 
 func getUserTasks(ctx context.Context, t *testing.T, storage *Storage) {
+	t.Run("user exist", func(t *testing.T) {
+		
+	})
 	u := &types.User{
 		ID:       int64(randomId()),
 		Username: randomURL(),

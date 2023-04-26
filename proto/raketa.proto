@@ -84,7 +84,7 @@ message GetUserStatsRequest {
 }
 
 message GetUserStatsResponse {
-    int64 tasks = 1;
+    int64 closed_tasks_count = 1;
 }
 
 message CreateTaskRequest {

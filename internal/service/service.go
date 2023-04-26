@@ -148,7 +148,7 @@ func (s *Service) GetUserStats(ctx context.Context, req *proto.GetUserStatsReque
 		return &proto.GetUserStatsResponse{}, err
 	}
 	return &proto.GetUserStatsResponse{
-		Tasks: tasksCount,
+		ClosedTasksCount: tasksCount,
 	}, nil
 }
 

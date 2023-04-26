@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/jackc/pgx/v5"
@@ -60,8 +59,8 @@ func (s *Storage) DeleteTask(ctx context.Context, task *types.Task) error {
 func (s *Storage) AssignUser(ctx context.Context, req *types.AssignUserRequest) error {
 	var id *int64
 	if err := s.db.QueryRow(ctx, `SELECT id FROM users WHERE telegram_username = $1`, req.Username).Scan(&id); err != nil {
-		if err == sql.ErrNoRows {
-			return errors.New("user not found")
+		if err == pgx.ErrNoRows {
+			return pgx.ErrNoRows
 		}
 		return err
 	}
@@ -133,8 +132,8 @@ func (s *Storage) GetUserStats(ctx context.Context, user *types.User) (int64, er
 	var tasksCount int64
 	query := `SELECT COUNT(*) FROM tasks WHERE assigned_id = $1 AND status = 'closed'`
 	if err := s.db.QueryRow(ctx, query, user.ID).Scan(&tasksCount); err != nil {
-		if err == sql.ErrNoRows {
-			return 0, errors.New("user not found")
+		if err == pgx.ErrNoRows {
+			return 0, pgx.ErrNoRows
 		}
 		return 0, err
 	}
