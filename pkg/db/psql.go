@@ -12,7 +12,7 @@ import (
 func NewPool(ctx context.Context) (*pgxpool.Pool, error) {
 	connString := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s sslmode=disable",
-		"localhost", "postgres", "postgres", "raketadb",
+		"raketadb", "postgres", "postgres", "raketadb",
 	)
 
 	dbpool, err := pgxpool.New(ctx, connString)
