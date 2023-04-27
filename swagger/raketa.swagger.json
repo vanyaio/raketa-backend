@@ -196,7 +196,7 @@
         ]
       }
     },
-    "/users/role/{userId}": {
+    "/users/role/{username}": {
       "get": {
         "operationId": "RaketaService_GetUserRole",
         "responses": {
@@ -215,11 +215,10 @@
         },
         "parameters": [
           {
-            "name": "userId",
+            "name": "username",
             "in": "path",
             "required": true,
-            "type": "string",
-            "format": "int64"
+            "type": "string"
           }
         ],
         "tags": [

@@ -1,1 +1,1 @@
-ALTER TABLE users ADD COLUMN telegram_username VARCHAR NOT NULL UNIQUE;
+ALTER TABLE users ADD COLUMN telegram_username VARCHAR UNIQUE;

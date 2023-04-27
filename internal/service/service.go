@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/vanyaio/raketa-backend/internal/types"
 	"github.com/vanyaio/raketa-backend/pkg/utils"
@@ -103,23 +102,19 @@ func (s *Service) GetUnassignTasks(ctx context.Context, req *proto.GetUnassignTa
 }
 
 func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest) (*proto.GetUserRoleResponse, error) {
-	value, err := utils.CheckAdminRole(adminRole)
-	if err != nil {
-		return nil, err
-	}
-	id, err := strconv.Atoi(value)
+	adminName, err := utils.CheckAdminRole(adminRole)
 	if err != nil {
 		return nil, err
 	}
 	ok, err := s.storage.CheckUser(ctx, &types.User{
-		ID: req.UserId,
+		Username: req.Username,
 	})
 	if !ok || err != nil {
 		return &proto.GetUserRoleResponse{
 			Role: proto.GetUserRoleResponse_UNKNOWN,
 		}, err
 	}
-	if req.UserId == int64(id) {
+	if req.Username == adminName {
 		return &proto.GetUserRoleResponse{
 			Role: proto.GetUserRoleResponse_ADMIN,
 		}, nil

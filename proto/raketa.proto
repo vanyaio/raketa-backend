@@ -15,7 +15,7 @@ service RaketaService {
     };
     rpc GetUserRole(GetUserRoleRequest) returns (GetUserRoleResponse) {
         option (google.api.http) = {
-            get: "/users/role/{user_id}"
+            get: "/users/role/{username}"
         };
     };
     rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {
@@ -67,7 +67,7 @@ message SignUpRequest{
 message SignUpResponse {}
 
 message GetUserRoleRequest {
-    int64 user_id = 1;
+    string username = 1;
 }
 
 message GetUserRoleResponse {

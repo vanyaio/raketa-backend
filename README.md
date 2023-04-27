@@ -2,7 +2,7 @@
 
 # Перед запуском проекта локально или через docker-compose в корне создайте файл .env:
 ```
-    ADMIN_RAKETA=1234
+    ADMIN_RAKETA=qwerty
     GRPC_PORT=:50052
     REST_PORT=:9090
     POSTGRES_USER=postgres
@@ -47,3 +47,6 @@
 ```
     make postgres-local-del
 ```
+
+# SWAGGER 
+* [swagger.io](https://swagger.io/)

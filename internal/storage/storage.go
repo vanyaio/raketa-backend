@@ -109,8 +109,8 @@ func (s *Storage) GetUnassignTasks(ctx context.Context) ([]*types.Task, error) {
 
 func (s *Storage) CheckUser(ctx context.Context, user *types.User) (bool, error) {
 	var exists bool
-	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1)`
-	_ = s.db.QueryRow(ctx, query, user.ID).Scan(&exists)
+	query := `SELECT EXISTS (SELECT * FROM users WHERE telegram_username = $1)`
+	_ = s.db.QueryRow(ctx, query, user.Username).Scan(&exists)
 	if !exists {
 		return false, errors.New("User doesn't exists")
 	}
