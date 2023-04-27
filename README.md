@@ -48,5 +48,7 @@
     make postgres-local-del
 ```
 
-# SWAGGER 
-* [swagger.io](https://swagger.io/)
+# SWAGGER доступен после запуска проекта "make run"
+```
+    http://localhost:9090/swagger
+```

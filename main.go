@@ -77,13 +77,18 @@ func runGRPCServer(service *service.Service, config *config.Config) error {
 }
 
 func runRESTServer(service *service.Service, config *config.Config) error {
-	mux := runtime.NewServeMux()
+	gmux := runtime.NewServeMux()
 
-	err := proto.RegisterRaketaServiceHandlerServer(context.Background(), mux, service)
+	err := proto.RegisterRaketaServiceHandlerServer(context.Background(), gmux, service)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	mux := http.NewServeMux()
+	mux.Handle("/", gmux)
+	fs := http.FileServer(http.Dir("./swagger"))
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	
 	log.Println("rest server start")
 	if err := http.ListenAndServe(config.RESTServer.RestPort, mux); err != nil {
 		log.Fatal(err)
