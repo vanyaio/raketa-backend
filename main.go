@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"log"
 	"net"
 	"net/http"
@@ -15,16 +14,27 @@ import (
 	"github.com/vanyaio/raketa-backend/internal/service"
 	"github.com/vanyaio/raketa-backend/internal/storage"
 	"github.com/vanyaio/raketa-backend/pkg/db"
+	"github.com/vanyaio/raketa-backend/pkg/utils"
 	proto "github.com/vanyaio/raketa-backend/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-func main() {
-	grpcPort := flag.String("grpc-port", ":50052", "grpc server port")
-	restPort := flag.String("rest-port", ":9090", "rest server port")
-	flag.Parse()
+const (
+	grpcPort = "GRPC_PORT"
+	restPort = "REST_PORT"
+)
 
+func main() {
+	grpcPort, err := utils.GetEnvValue(grpcPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+	restPort, err := utils.GetEnvValue(restPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -40,14 +50,14 @@ func main() {
 
 	// grpc server
 	go func() {
-		if err := runGRPCServer(service, *grpcPort); err != nil {
+		if err := runGRPCServer(service, grpcPort); err != nil {
 			log.Fatal(err)
 		}
 	}()
 
 	// rest server
 	go func() {
-		if err := runRESTServer(service, *restPort); err != nil {
+		if err := runRESTServer(service, restPort); err != nil {
 			log.Fatal(err)
 		}
 	}()

@@ -5,13 +5,17 @@ services:
     container_name: raketa
     build:
       dockerfile: Dockerfile
-    command: ./wait-for-postgres.sh raketadb ./bin/api
+    command: sh -c "./wait-for-postgres.sh raketadb &&
+             migrate -path /app/migrations -database 'postgres://postgres:postgres@raketadb:5432/raketadb?sslmode=disable' up &&
+             ./bin/api"
     ports:
       - 50052:50052
       - 9090:9090
     env_file:
       - .env
     environment:
+      - GRPC_PORT=:50052
+      - REST_PORT=:9090
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - raketadb
@@ -31,8 +35,6 @@ services:
       - POSTGRES_DB=raketadb
       - PGDATA = "/var/lib/postgresql/data/pgdata"
     volumes:
-      - ./migrations/000001_raketadb.up.sql:/docker-entrypoint-initdb.d/1_initdb.sql
-      - ./migrations/000002_raketadb.up.sql:/docker-entrypoint-initdb.d/2_initdb.sql
       - ./pgdata:/var/lib/postgresql/data
     restart: always
     networks:

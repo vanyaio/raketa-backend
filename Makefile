@@ -45,6 +45,10 @@ migrate-up:
 migrate-down:
 	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketadb?sslmode=disable" down ${version}
 
+# docker-migrations
+docker-migrate-down:
+	docker-compose exec raketa bash -c "migrate -path /app/migrations -database 'postgres://postgres:postgres@raketadb:5432/raketadb?sslmode=disable' down ${version}"
+
 evans:
 	evans -r repl -p 50052
 

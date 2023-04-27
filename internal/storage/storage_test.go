@@ -146,7 +146,7 @@ func (r *RaketaTestSuite) Test_AssignUser() {
 		r.NoError(err)
 	})
 
-	r.Run("user doesn't exists", func() {
+	r.Run("user doesn't exist", func() {
 		u := &types.User{
 			ID:       int64(randomId()),
 			Username: randomURL(),
