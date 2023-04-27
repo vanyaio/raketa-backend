@@ -5,8 +5,8 @@ WORKDIR /app
 COPY ./ /app/
 
 ENV PATH="$PATH:/usr/local/bin"
-ENV GRPC_PORT=50052
-ENV REST_PORT=9090
+ENV GRPC_PORT=:50052
+ENV REST_PORT=:9090
 # install psql
 RUN apt-get update
 RUN apt-get -y install postgresql-client
