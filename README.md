@@ -8,14 +8,6 @@
     POSTGRES_USER=postgres
     POSTGRES_PASSWORD=postgres
 ```
-
-# Для теститорования методов storage запустите базу данных, создайте миграции и создайте в папке с тестами файл .env:
-```
-    POSTGRES_HOST=localhost
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=postgres
-    POSTGRES_DB=raketalocaldb
-```
 # Далее введите команду:
 ```
     make tests
@@ -35,7 +27,6 @@
     make docker-migrate-down version=1 - откат до 1-й миграции
 ```
 
-
 # Запуск серверов локально
 ```
     make postgres-up
@@ -51,4 +42,12 @@
 # SWAGGER доступен после запуска проекта "make run"
 ```
     http://localhost:9090/swagger
+```
+
+# Для теститорования методов storage:
+```
+    make postgres-local-up - если базы нет
+    make postgres-local-run - если база есть
+    make migrate-up -если миграции не сделаны
+    make test - для самого тестирования
 ```

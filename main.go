@@ -20,8 +20,12 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+const (
+	filepath string = ".env"
+)
+
 func main() {
-	config := config.GetConfig()
+	config := config.GetConfig(".env")
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

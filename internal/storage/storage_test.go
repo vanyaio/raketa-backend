@@ -15,6 +15,10 @@ import (
 	"github.com/vanyaio/raketa-backend/pkg/db"
 )
 
+const (
+	filepath string = "../../.env"
+)
+
 type RaketaTestSuite struct {
 	suite.Suite
 	db      *pgxpool.Pool
@@ -27,7 +31,7 @@ func TestRaketaTestSuit(t *testing.T) {
 }
 
 func (r *RaketaTestSuite) SetupSuite() {
-	config := config.GetConfig()
+	config := config.GetConfig(filepath)
 
 	ctx := context.Background()
 

@@ -38,11 +38,11 @@ var (
 )
 
 // Get the config file
-func GetConfig() *Config {
+func GetConfig(filepath string) *Config {
 	once.Do(func() {
 		log.Println("read application configuration")
 		config = &Config{}
-		if err := cleanenv.ReadConfig(".env", config); err != nil {
+		if err := cleanenv.ReadConfig(filepath, config); err != nil {
 			help, _ := cleanenv.GetDescription(config, nil)
 			log.Println(help)
 			log.Fatal(err)
