@@ -18,7 +18,7 @@ postgres-local-run: postgres-local-start
 postgres-local-stop:
 	docker stop raketalocaldb
 
-postgres-local-del: postgres-stop
+postgres-local-del: postgres-local-stop
 	docker rm raketalocaldb
 
 
