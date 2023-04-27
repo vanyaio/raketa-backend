@@ -76,14 +76,14 @@ func request_RaketaService_GetUserRole_0(ctx context.Context, marshaler runtime.
 		_   = err
 	)
 
-	val, ok = pathParams["user_id"]
+	val, ok = pathParams["username"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "user_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "username")
 	}
 
-	protoReq.UserId, err = runtime.Int64(val)
+	protoReq.Username, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "user_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "username", err)
 	}
 
 	msg, err := client.GetUserRole(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -102,14 +102,14 @@ func local_request_RaketaService_GetUserRole_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
-	val, ok = pathParams["user_id"]
+	val, ok = pathParams["username"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "user_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "username")
 	}
 
-	protoReq.UserId, err = runtime.Int64(val)
+	protoReq.Username, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "user_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "username", err)
 	}
 
 	msg, err := server.GetUserRole(ctx, &protoReq)
@@ -307,20 +307,20 @@ func local_request_RaketaService_CloseTask_0(ctx context.Context, marshaler runt
 
 }
 
-func request_RaketaService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetOpenTasksRequest
+func request_RaketaService_GetUnassignTasks_0(ctx context.Context, marshaler runtime.Marshaler, client RaketaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetUnassignTasksRequest
 	var metadata runtime.ServerMetadata
 
-	msg, err := client.GetOpenTasks(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetUnassignTasks(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_RaketaService_GetOpenTasks_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetOpenTasksRequest
+func local_request_RaketaService_GetUnassignTasks_0(ctx context.Context, marshaler runtime.Marshaler, server RaketaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetUnassignTasksRequest
 	var metadata runtime.ServerMetadata
 
-	msg, err := server.GetOpenTasks(ctx, &protoReq)
+	msg, err := server.GetUnassignTasks(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -398,7 +398,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetUserRole", runtime.WithHTTPPathPattern("/users/role/{user_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetUserRole", runtime.WithHTTPPathPattern("/users/role/{username}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -540,7 +540,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 
 	})
 
-	mux.Handle("GET", pattern_RaketaService_GetOpenTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RaketaService_GetUnassignTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -548,12 +548,12 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks/open"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/raketa.RaketaService/GetUnassignTasks", runtime.WithHTTPPathPattern("/tasks/unassign"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RaketaService_GetOpenTasks_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RaketaService_GetUnassignTasks_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -561,7 +561,7 @@ func RegisterRaketaServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 			return
 		}
 
-		forward_RaketaService_GetOpenTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_GetUnassignTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -659,7 +659,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetUserRole", runtime.WithHTTPPathPattern("/users/role/{user_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetUserRole", runtime.WithHTTPPathPattern("/users/role/{username}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -785,25 +785,25 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 
 	})
 
-	mux.Handle("GET", pattern_RaketaService_GetOpenTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RaketaService_GetUnassignTasks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetOpenTasks", runtime.WithHTTPPathPattern("/tasks/open"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/raketa.RaketaService/GetUnassignTasks", runtime.WithHTTPPathPattern("/tasks/unassign"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RaketaService_GetOpenTasks_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RaketaService_GetUnassignTasks_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_RaketaService_GetOpenTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RaketaService_GetUnassignTasks_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -835,7 +835,7 @@ func RegisterRaketaServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 var (
 	pattern_RaketaService_SignUp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"users", "sign-up"}, ""))
 
-	pattern_RaketaService_GetUserRole_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"users", "role", "user_id"}, ""))
+	pattern_RaketaService_GetUserRole_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"users", "role", "username"}, ""))
 
 	pattern_RaketaService_GetUserStats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"users", "stats", "user_id"}, ""))
 
@@ -847,7 +847,7 @@ var (
 
 	pattern_RaketaService_CloseTask_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"tasks", "close"}, ""))
 
-	pattern_RaketaService_GetOpenTasks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"tasks", "open"}, ""))
+	pattern_RaketaService_GetUnassignTasks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"tasks", "unassign"}, ""))
 
 	pattern_RaketaService_SetTaskPrice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"tasks", "price"}, ""))
 )
@@ -867,7 +867,7 @@ var (
 
 	forward_RaketaService_CloseTask_0 = runtime.ForwardResponseMessage
 
-	forward_RaketaService_GetOpenTasks_0 = runtime.ForwardResponseMessage
+	forward_RaketaService_GetUnassignTasks_0 = runtime.ForwardResponseMessage
 
 	forward_RaketaService_SetTaskPrice_0 = runtime.ForwardResponseMessage
 )

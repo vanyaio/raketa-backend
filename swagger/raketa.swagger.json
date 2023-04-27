@@ -1,0 +1,459 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "raketa.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RaketaService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/tasks/close": {
+      "patch": {
+        "operationId": "RaketaService_CloseTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaCloseTaskResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/raketaCloseTaskRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/tasks/create": {
+      "post": {
+        "operationId": "RaketaService_CreateTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaCreateTaskResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/raketaCreateTaskRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/tasks/delete": {
+      "delete": {
+        "operationId": "RaketaService_DeleteTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaDeleteTaskResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/tasks/price": {
+      "patch": {
+        "operationId": "RaketaService_SetTaskPrice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaSetTaskPriceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/raketaSetTaskPriceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/tasks/unassign": {
+      "get": {
+        "operationId": "RaketaService_GetUnassignTasks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaGetUnassignTasksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/users/assign": {
+      "patch": {
+        "operationId": "RaketaService_AssignUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaAssignUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/raketaAssignUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/users/role/{username}": {
+      "get": {
+        "operationId": "RaketaService_GetUserRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaGetUserRoleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/users/sign-up": {
+      "post": {
+        "operationId": "RaketaService_SignUp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaSignUpResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/raketaSignUpRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/users/stats/{userId}": {
+      "get": {
+        "operationId": "RaketaService_GetUserStats",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaGetUserStatsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GetUserRoleResponseRole": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "REGULAR",
+        "ADMIN"
+      ],
+      "default": "UNKNOWN"
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "raketaAssignUserRequest": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "raketaAssignUserResponse": {
+      "type": "object"
+    },
+    "raketaCloseTaskRequest": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "raketaCloseTaskResponse": {
+      "type": "object"
+    },
+    "raketaCreateTaskRequest": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "raketaCreateTaskResponse": {
+      "type": "object"
+    },
+    "raketaDeleteTaskResponse": {
+      "type": "object"
+    },
+    "raketaGetUnassignTasksResponse": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/raketaTask"
+          }
+        }
+      }
+    },
+    "raketaGetUserRoleResponse": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "$ref": "#/definitions/GetUserRoleResponseRole"
+        }
+      }
+    },
+    "raketaGetUserStatsResponse": {
+      "type": "object",
+      "properties": {
+        "closedTasksCount": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "raketaSetTaskPriceRequest": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "raketaSetTaskPriceResponse": {
+      "type": "object"
+    },
+    "raketaSignUpRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "raketaSignUpResponse": {
+      "type": "object"
+    },
+    "raketaTask": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "status": {
+          "$ref": "#/definitions/raketaTaskStatus"
+        },
+        "price": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "raketaTaskStatus": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "OPEN",
+        "CLOSED",
+        "DECLINED"
+      ],
+      "default": "UNKNOWN"
+    }
+  }
+}

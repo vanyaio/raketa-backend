@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"log"
 	"net"
 	"net/http"
@@ -12,6 +11,7 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/vanyaio/raketa-backend/config"
 	"github.com/vanyaio/raketa-backend/internal/service"
 	"github.com/vanyaio/raketa-backend/internal/storage"
 	"github.com/vanyaio/raketa-backend/pkg/db"
@@ -20,15 +20,17 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func main() {
-	grpcPort := flag.String("grpc-port", ":50052", "grpc server port")
-	restPort := flag.String("rest-port", ":9090", "rest server port")
-	flag.Parse()
+const (
+	filepath string = ".env"
+)
 
+func main() {
+	config := config.GetConfig(".env")
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	pool, err := db.NewPool(ctx)
+	pool, err := db.NewPool(ctx, config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,14 +42,14 @@ func main() {
 
 	// grpc server
 	go func() {
-		if err := runGRPCServer(service, *grpcPort); err != nil {
+		if err := runGRPCServer(service, config); err != nil {
 			log.Fatal(err)
 		}
 	}()
 
 	// rest server
 	go func() {
-		if err := runRESTServer(service, *restPort); err != nil {
+		if err := runRESTServer(service, config); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -59,14 +61,14 @@ func main() {
 	<-quit
 }
 
-func runGRPCServer(service *service.Service, port string) error {
+func runGRPCServer(service *service.Service, config *config.Config) error {
 	server := grpc.NewServer(grpc.MaxConcurrentStreams(1000))
 
 	proto.RegisterRaketaServiceServer(server, service)
 
 	reflection.Register(server)
 
-	lis, err := net.Listen("tcp", port)
+	lis, err := net.Listen("tcp", config.GRPCServer.GrpcPort)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,16 +80,21 @@ func runGRPCServer(service *service.Service, port string) error {
 	return nil
 }
 
-func runRESTServer(service *service.Service, port string) error {
-	mux := runtime.NewServeMux()
+func runRESTServer(service *service.Service, config *config.Config) error {
+	gmux := runtime.NewServeMux()
 
-	err := proto.RegisterRaketaServiceHandlerServer(context.Background(), mux, service)
+	err := proto.RegisterRaketaServiceHandlerServer(context.Background(), gmux, service)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	mux := http.NewServeMux()
+	mux.Handle("/", gmux)
+	fs := http.FileServer(http.Dir("./swagger"))
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	
 	log.Println("rest server start")
-	if err := http.ListenAndServe(port, mux); err != nil {
+	if err := http.ListenAndServe(config.RESTServer.RestPort, mux); err != nil {
 		log.Fatal(err)
 	}
 

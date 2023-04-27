@@ -8,142 +8,172 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/stretchr/testify/require"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/stretchr/testify/suite"
+	"github.com/vanyaio/raketa-backend/config"
 	"github.com/vanyaio/raketa-backend/internal/types"
 	"github.com/vanyaio/raketa-backend/pkg/db"
 )
 
-func Test_DB(t *testing.T) {
+const (
+	filepath string = "../../.env"
+)
+
+type RaketaTestSuite struct {
+	suite.Suite
+	db      *pgxpool.Pool
+	storage *Storage
+	ctx     context.Context
+}
+
+func TestRaketaTestSuit(t *testing.T) {
+	suite.Run(t, &RaketaTestSuite{})
+}
+
+func (r *RaketaTestSuite) SetupSuite() {
+	config := config.GetConfig(filepath)
+
 	ctx := context.Background()
 
-	pool, err := db.NewPool(ctx)
-	require.NoError(t, err)
-	defer pool.Close()
+	pool, err := db.NewPool(ctx, config)
+	r.NoError(err)
 
 	storage := NewStorage(pool)
 
-	createUser(ctx, t, storage)
-
-	createTask(ctx, t, storage)
-
-	deleteTask(ctx, t, storage)
-
-	assignUser(ctx, t, storage)
-
-	closeTask(ctx, t, storage)
-
-	getOpenTasks(ctx, t, storage)
-
-	setTaskPrice(ctx, t, storage)
-
-	getUserTasks(ctx, t , storage)
+	r.db = pool
+	r.storage = storage
+	r.ctx = ctx
 }
 
-func createUser(ctx context.Context, t *testing.T, storage *Storage) {
-	u := &types.User{
-		ID:       int64(randomId()),
-		Username: randomURL(),
-	}
-
-	err := storage.CreateUser(ctx, u)
-	require.NoError(t, err)
-
-	var exists bool
-	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username = $2)`
-	err = storage.db.QueryRow(ctx, query, u.ID, u.Username).Scan(&exists)
-	if err != nil {
-		require.Error(t, err)
-	}
-	require.True(t, exists)
-	require.NoError(t, err)
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+func (r *RaketaTestSuite) TearDownSuite() {
+	r.db.Close()
 }
 
-func createTask(ctx context.Context, t *testing.T, storage *Storage) {
+func (r *RaketaTestSuite) TearDownSubTest() {
+	r.db.Exec(r.ctx, `TRUNCATE users CASCADE`)
+}
+
+func (r *RaketaTestSuite) TearDownTest() {
+	r.db.Exec(r.ctx, `TRUNCATE users CASCADE`)
+}
+
+func (r *RaketaTestSuite) Test_CreateUser() {
+	r.Run("username exists", func() {
+		u := &types.User{
+			ID:       int64(randomId()),
+			Username: randomURL(),
+		}
+	
+		err := r.storage.CreateUser(r.ctx, u)
+		r.NoError(err)
+	
+		var exists bool
+		query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username = $2)`
+		err = r.db.QueryRow(r.ctx, query, u.ID, u.Username).Scan(&exists)
+		if err != nil {
+			r.Error(err)
+		}
+		r.True(exists)
+		r.NoError(err)
+	})
+
+	r.Run("username doesn't exist", func() {
+		u := &types.User{
+			ID:       int64(randomId()),
+		}
+	
+		err := r.storage.CreateUser(r.ctx, u)
+		r.NoError(err)
+	
+		var exists bool
+		query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username IS NULL)`
+		err = r.db.QueryRow(r.ctx, query, u.ID).Scan(&exists)
+		if err != nil {
+			r.Error(err)
+		}
+		r.True(exists)
+		r.NoError(err)
+	})
+}
+
+func (r *RaketaTestSuite) Test_CreateTask() {
 	task := &types.Task{
 		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	err := storage.CreateTask(ctx, task)
-	require.NoError(t, err)
+	err := r.storage.CreateTask(r.ctx, task)
+	r.NoError(err)
 
 	var exists bool
 	query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1)`
-	err = storage.db.QueryRow(ctx, query, task.Url).Scan(&exists)
+	err = r.storage.db.QueryRow(r.ctx, query, task.Url).Scan(&exists)
 	if err != nil {
-		require.Error(t, err)
+		r.Error(err)
 	}
-	require.True(t, exists)
-	require.NoError(t, err)
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	r.True(exists)
+	r.NoError(err)
 }
 
-func deleteTask(ctx context.Context, t *testing.T, storage *Storage) {
+func (r *RaketaTestSuite) Test_DeleteTask() {
 	task := &types.Task{
 		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	err := storage.CreateTask(ctx, task)
-	require.NoError(t, err)
+	err := r.storage.CreateTask(r.ctx, task)
+	r.NoError(err)
 
-	err = storage.DeleteTask(ctx, task)
-	require.NoError(t, err)
+	err = r.storage.DeleteTask(r.ctx, task)
+	r.NoError(err)
 
 	var notExists bool
 	query := `SELECT NOT EXISTS (SELECT * FROM tasks WHERE url = $1)`
-	err = storage.db.QueryRow(ctx, query, task.Url).Scan(&notExists)
+	err = r.storage.db.QueryRow(r.ctx, query, task.Url).Scan(&notExists)
 	if err != nil {
-		require.Error(t, err)
+		r.Error(err)
 	}
-	require.True(t, notExists)
-	require.NoError(t, err)
+	r.True(notExists)
+	r.NoError(err)
 }
 
-func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
-	t.Parallel()
-
-	t.Run("user exists", func(t *testing.T) {
+func (r *RaketaTestSuite) Test_AssignUser() {
+	r.Run("user exists", func() {
 		u := &types.User{
 			ID:       int64(randomId()),
 			Username: randomURL(),
 		}
-	
-		err := storage.CreateUser(ctx, u)
-		require.NoError(t, err)
-	
+
+		err := r.storage.CreateUser(r.ctx, u)
+		r.NoError(err)
+
 		task := &types.Task{
 			Url:    randomURL(),
 			Status: types.Open,
 		}
-	
-		err = storage.CreateTask(ctx, task)
-		require.NoError(t, err)
-	
+
+		err = r.storage.CreateTask(r.ctx, task)
+		r.NoError(err)
+
 		req := &types.AssignUserRequest{
 			Url:      task.Url,
 			Username: u.Username,
 		}
-	
-		err = storage.AssignUser(ctx, req)
-		require.NoError(t, err)
-	
+
+		err = r.storage.AssignUser(r.ctx, req)
+		r.NoError(err)
+
 		var exists bool
 		query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1 AND assigned_id IS NOT NULL)`
-		err = storage.db.QueryRow(ctx, query, task.Url).Scan(&exists)
+		err = r.storage.db.QueryRow(r.ctx, query, task.Url).Scan(&exists)
 		if err != nil {
-			require.Error(t, err)
+			r.Error(err)
 		}
-		require.True(t, exists)
-		require.NoError(t, err)
-	
-		storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+		r.True(exists)
+		r.NoError(err)
 	})
-	
-	t.Run("user doesn't exists", func(t *testing.T) {
+
+	r.Run("user doesn't exist", func() {
 		u := &types.User{
 			ID:       int64(randomId()),
 			Username: randomURL(),
@@ -153,124 +183,130 @@ func assignUser(ctx context.Context, t *testing.T, storage *Storage) {
 			Url:    randomURL(),
 			Status: types.Open,
 		}
-	
-		err := storage.CreateTask(ctx, task)
-		require.NoError(t, err)
-	
+
+		err := r.storage.CreateTask(r.ctx, task)
+		r.NoError(err)
+
 		req := &types.AssignUserRequest{
 			Url:      task.Url,
 			Username: u.Username,
 		}
-		
-		err = storage.AssignUser(ctx, req)
-		require.EqualError(t, err, pgx.ErrNoRows.Error())
 
-		storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+		err = r.storage.AssignUser(r.ctx, req)
+		r.EqualError(err, pgx.ErrNoRows.Error())
 	})
 }
 
-func closeTask(ctx context.Context, t *testing.T, storage *Storage) {
+func (r *RaketaTestSuite) Test_CloseTask() {
 	task := &types.Task{
 		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	err := storage.CreateTask(ctx, task)
-	require.NoError(t, err)
+	err := r.storage.CreateTask(r.ctx, task)
+	r.NoError(err)
 
 	req := &types.CloseTaskRequest{
 		Url: task.Url,
 	}
 
-	err = storage.CloseTask(ctx, req)
-	require.NoError(t, err)
+	err = r.storage.CloseTask(r.ctx, req)
+	r.NoError(err)
 
 	var exists bool
 	query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1 AND status = 'closed')`
-	err = storage.db.QueryRow(ctx, query, req.Url).Scan(&exists)
+	err = r.storage.db.QueryRow(r.ctx, query, req.Url).Scan(&exists)
 	if err != nil {
-		require.Error(t, err)
+		r.Error(err)
 	}
-	require.True(t, exists)
-	require.NoError(t, err)
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	r.True(exists)
+	r.NoError(err)
 }
 
-func getOpenTasks(ctx context.Context, t *testing.T, storage *Storage) {
+func (r *RaketaTestSuite) Test_GetUnassignTasks() {
+	u := &types.User{
+		ID:       int64(randomId()),
+		Username: randomURL(),
+	}
+
+	err := r.storage.CreateUser(r.ctx, u)
+	r.NoError(err)
+
+
 	taskOpen1 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
 		Status: types.Open,
 	}
 
-	err := storage.CreateTask(ctx, taskOpen1)
-	require.NoError(t, err)
+	err = r.storage.CreateTask(r.ctx, taskOpen1)
+	r.NoError(err)
+
+	req := &types.AssignUserRequest{
+		Url:      taskOpen1.Url,
+		Username: u.Username,
+	}
+
+	err = r.storage.AssignUser(r.ctx, req)
+	r.NoError(err)
 
 	taskOpen2 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d2", randomId()),
 		Status: types.Open,
 	}
 
-	err = storage.CreateTask(ctx, taskOpen2)
-	require.NoError(t, err)
+	err = r.storage.CreateTask(r.ctx, taskOpen2)
+	r.NoError(err)
 
 	taskClosed := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d3", randomId()),
 		Status: types.Closed,
 	}
 
-	err = storage.CreateTask(ctx, taskClosed)
-	require.NoError(t, err)
+	err = r.storage.CreateTask(r.ctx, taskClosed)
+	r.NoError(err)
 
-	tasks, err := storage.GetOpenTasks(ctx)
-	require.NoError(t, err)
-	require.Contains(t, tasks, taskOpen1)
-	require.Contains(t, tasks, taskOpen2)
-	require.NotContains(t, tasks, taskClosed)
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	tasks, err := r.storage.GetUnassignTasks(r.ctx)
+	r.NoError(err)
+	r.NotContains(tasks, taskOpen1)
+	r.Contains(tasks, taskOpen2)
+	r.NotContains(tasks, taskClosed)
 }
 
-func setTaskPrice(ctx context.Context, t *testing.T, storage *Storage) {
+func (r *RaketaTestSuite) Test_SetTaskPrice() {
 	task := &types.Task{
 		Url:    randomURL(),
 		Status: types.Open,
 	}
 
-	err := storage.CreateTask(ctx, task)
-	require.NoError(t, err)
+	err := r.storage.CreateTask(r.ctx, task)
+	r.NoError(err)
 
 	req := &types.SetTaskPriceRequest{
 		Url:   task.Url,
 		Price: uint64(randomId()),
 	}
 
-	err = storage.SetTaskPrice(ctx, req)
-	require.NoError(t, err)
+	err = r.storage.SetTaskPrice(r.ctx, req)
+	r.NoError(err)
 
 	var exists bool
 	query := `SELECT EXISTS (SELECT * FROM tasks WHERE url = $1 AND price = $2)`
-	err = storage.db.QueryRow(ctx, query, req.Url, req.Price).Scan(&exists)
+	err = r.storage.db.QueryRow(r.ctx, query, req.Url, req.Price).Scan(&exists)
 	if err != nil {
-		require.Error(t, err)
+		r.Error(err)
 	}
-	require.True(t, exists)
-	require.NoError(t, err)
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	r.True(exists)
+	r.NoError(err)
 }
 
-func getUserTasks(ctx context.Context, t *testing.T, storage *Storage) {
-	t.Run("user exists", func(t *testing.T) {
-		
-	})
+func (r *RaketaTestSuite) Test_GetUserTasks() {
 	u := &types.User{
 		ID:       int64(randomId()),
 		Username: randomURL(),
 	}
 
-	err := storage.CreateUser(ctx, u)
-	require.NoError(t, err)
+	err := r.storage.CreateUser(r.ctx, u)
+	r.NoError(err)
 
 	taskClosed := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("1"),
@@ -278,15 +314,15 @@ func getUserTasks(ctx context.Context, t *testing.T, storage *Storage) {
 	}
 
 	taskOpen := &types.Task{
-		Url:    randomURL()+ fmt.Sprintf("2"),
+		Url:    randomURL() + fmt.Sprintf("2"),
 		Status: types.Open,
 	}
 
-	err = storage.CreateTask(ctx, taskClosed)
-	require.NoError(t, err)
+	err = r.storage.CreateTask(r.ctx, taskClosed)
+	r.NoError(err)
 
-	err = storage.CreateTask(ctx, taskOpen)
-	require.NoError(t, err)
+	err = r.storage.CreateTask(r.ctx, taskOpen)
+	r.NoError(err)
 
 	reqClosed := &types.AssignUserRequest{
 		Url:      taskClosed.Url,
@@ -298,21 +334,19 @@ func getUserTasks(ctx context.Context, t *testing.T, storage *Storage) {
 		Username: u.Username,
 	}
 
-	err = storage.AssignUser(ctx, reqClosed)
-	require.NoError(t, err)
+	err = r.storage.AssignUser(r.ctx, reqClosed)
+	r.NoError(err)
 
-	err = storage.AssignUser(ctx, reqOpen)
-	require.NoError(t, err)
+	err = r.storage.AssignUser(r.ctx, reqOpen)
+	r.NoError(err)
 
-	err = storage.CloseTask(ctx, &types.CloseTaskRequest{
+	err = r.storage.CloseTask(r.ctx, &types.CloseTaskRequest{
 		Url: reqClosed.Url,
 	})
 
-	tasksCount, err := storage.GetUserStats(ctx, u)
-	require.NoError(t, err)
-	require.Equal(t, tasksCount, int64(1))
-
-	storage.db.Exec(ctx, `TRUNCATE users CASCADE`)
+	tasksCount, err := r.storage.GetUserStats(r.ctx, u)
+	r.NoError(err)
+	r.Equal(tasksCount, int64(1))
 }
 
 func randomURL() string {

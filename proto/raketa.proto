@@ -15,7 +15,7 @@ service RaketaService {
     };
     rpc GetUserRole(GetUserRoleRequest) returns (GetUserRoleResponse) {
         option (google.api.http) = {
-            get: "/users/role/{user_id}"
+            get: "/users/role/{username}"
         };
     };
     rpc GetUserStats(GetUserStatsRequest) returns (GetUserStatsResponse) {
@@ -46,9 +46,9 @@ service RaketaService {
             body: "*"
         };
     };
-    rpc GetOpenTasks(GetOpenTasksRequest) returns (GetOpenTasksResponse) {
+    rpc GetUnassignTasks(GetUnassignTasksRequest) returns (GetUnassignTasksResponse) {
         option (google.api.http) = {
-            get: "/tasks/open"
+            get: "/tasks/unassign"
         };
     };
     rpc SetTaskPrice(SetTaskPriceRequest) returns (SetTaskPriceResponse) {
@@ -67,7 +67,7 @@ message SignUpRequest{
 message SignUpResponse {}
 
 message GetUserRoleRequest {
-    int64 user_id = 1;
+    string username = 1;
 }
 
 message GetUserRoleResponse {
@@ -112,9 +112,9 @@ message CloseTaskRequest {
 
 message CloseTaskResponse {}
 
-message GetOpenTasksRequest {}
+message GetUnassignTasksRequest {}
 
-message GetOpenTasksResponse {
+message GetUnassignTasksResponse {
     repeated Task tasks = 1;
 }
 

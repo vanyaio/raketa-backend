@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/vanyaio/raketa-backend/internal/types"
 	"github.com/vanyaio/raketa-backend/pkg/utils"
@@ -19,7 +18,7 @@ type storage interface {
 	DeleteTask(ctx context.Context, task *types.Task) error
 	AssignUser(ctx context.Context, req *types.AssignUserRequest) error
 	CloseTask(ctx context.Context, req *types.CloseTaskRequest) error
-	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
+	GetUnassignTasks(ctx context.Context) ([]*types.Task, error)
 	CheckUser(ctx context.Context, user *types.User) (bool, error)
 	SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error
 	GetUserStats(ctx context.Context, user *types.User) (int64, error)
@@ -91,35 +90,31 @@ func (s *Service) CloseTask(ctx context.Context, req *proto.CloseTaskRequest) (*
 	return &proto.CloseTaskResponse{}, nil
 }
 
-func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksRequest) (*proto.GetOpenTasksResponse, error) {
-	tasks, err := s.storage.GetOpenTasks(ctx)
+func (s *Service) GetUnassignTasks(ctx context.Context, req *proto.GetUnassignTasksRequest) (*proto.GetUnassignTasksResponse, error) {
+	tasks, err := s.storage.GetUnassignTasks(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &proto.GetOpenTasksResponse{
+	return &proto.GetUnassignTasksResponse{
 		Tasks: convertTasksToProto(tasks),
 	}, nil
 }
 
 func (s *Service) GetUserRole(ctx context.Context, req *proto.GetUserRoleRequest) (*proto.GetUserRoleResponse, error) {
-	value, err := utils.CheckAdminRole(adminRole)
-	if err != nil {
-		return nil, err
-	}
-	id, err := strconv.Atoi(value)
+	adminName, err := utils.CheckAdminRole(adminRole)
 	if err != nil {
 		return nil, err
 	}
 	ok, err := s.storage.CheckUser(ctx, &types.User{
-		ID: req.UserId,
+		Username: req.Username,
 	})
 	if !ok || err != nil {
 		return &proto.GetUserRoleResponse{
 			Role: proto.GetUserRoleResponse_UNKNOWN,
 		}, err
 	}
-	if req.UserId == int64(id) {
+	if req.Username == adminName {
 		return &proto.GetUserRoleResponse{
 			Role: proto.GetUserRoleResponse_ADMIN,
 		}, nil

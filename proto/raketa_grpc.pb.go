@@ -19,15 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RaketaService_SignUp_FullMethodName       = "/raketa.RaketaService/SignUp"
-	RaketaService_GetUserRole_FullMethodName  = "/raketa.RaketaService/GetUserRole"
-	RaketaService_GetUserStats_FullMethodName = "/raketa.RaketaService/GetUserStats"
-	RaketaService_CreateTask_FullMethodName   = "/raketa.RaketaService/CreateTask"
-	RaketaService_DeleteTask_FullMethodName   = "/raketa.RaketaService/DeleteTask"
-	RaketaService_AssignUser_FullMethodName   = "/raketa.RaketaService/AssignUser"
-	RaketaService_CloseTask_FullMethodName    = "/raketa.RaketaService/CloseTask"
-	RaketaService_GetOpenTasks_FullMethodName = "/raketa.RaketaService/GetOpenTasks"
-	RaketaService_SetTaskPrice_FullMethodName = "/raketa.RaketaService/SetTaskPrice"
+	RaketaService_SignUp_FullMethodName           = "/raketa.RaketaService/SignUp"
+	RaketaService_GetUserRole_FullMethodName      = "/raketa.RaketaService/GetUserRole"
+	RaketaService_GetUserStats_FullMethodName     = "/raketa.RaketaService/GetUserStats"
+	RaketaService_CreateTask_FullMethodName       = "/raketa.RaketaService/CreateTask"
+	RaketaService_DeleteTask_FullMethodName       = "/raketa.RaketaService/DeleteTask"
+	RaketaService_AssignUser_FullMethodName       = "/raketa.RaketaService/AssignUser"
+	RaketaService_CloseTask_FullMethodName        = "/raketa.RaketaService/CloseTask"
+	RaketaService_GetUnassignTasks_FullMethodName = "/raketa.RaketaService/GetUnassignTasks"
+	RaketaService_SetTaskPrice_FullMethodName     = "/raketa.RaketaService/SetTaskPrice"
 )
 
 // RaketaServiceClient is the client API for RaketaService service.
@@ -41,7 +41,7 @@ type RaketaServiceClient interface {
 	DeleteTask(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteTaskResponse, error)
 	AssignUser(ctx context.Context, in *AssignUserRequest, opts ...grpc.CallOption) (*AssignUserResponse, error)
 	CloseTask(ctx context.Context, in *CloseTaskRequest, opts ...grpc.CallOption) (*CloseTaskResponse, error)
-	GetOpenTasks(ctx context.Context, in *GetOpenTasksRequest, opts ...grpc.CallOption) (*GetOpenTasksResponse, error)
+	GetUnassignTasks(ctx context.Context, in *GetUnassignTasksRequest, opts ...grpc.CallOption) (*GetUnassignTasksResponse, error)
 	SetTaskPrice(ctx context.Context, in *SetTaskPriceRequest, opts ...grpc.CallOption) (*SetTaskPriceResponse, error)
 }
 
@@ -116,9 +116,9 @@ func (c *raketaServiceClient) CloseTask(ctx context.Context, in *CloseTaskReques
 	return out, nil
 }
 
-func (c *raketaServiceClient) GetOpenTasks(ctx context.Context, in *GetOpenTasksRequest, opts ...grpc.CallOption) (*GetOpenTasksResponse, error) {
-	out := new(GetOpenTasksResponse)
-	err := c.cc.Invoke(ctx, RaketaService_GetOpenTasks_FullMethodName, in, out, opts...)
+func (c *raketaServiceClient) GetUnassignTasks(ctx context.Context, in *GetUnassignTasksRequest, opts ...grpc.CallOption) (*GetUnassignTasksResponse, error) {
+	out := new(GetUnassignTasksResponse)
+	err := c.cc.Invoke(ctx, RaketaService_GetUnassignTasks_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ type RaketaServiceServer interface {
 	DeleteTask(context.Context, *DeleteTaskRequest) (*DeleteTaskResponse, error)
 	AssignUser(context.Context, *AssignUserRequest) (*AssignUserResponse, error)
 	CloseTask(context.Context, *CloseTaskRequest) (*CloseTaskResponse, error)
-	GetOpenTasks(context.Context, *GetOpenTasksRequest) (*GetOpenTasksResponse, error)
+	GetUnassignTasks(context.Context, *GetUnassignTasksRequest) (*GetUnassignTasksResponse, error)
 	SetTaskPrice(context.Context, *SetTaskPriceRequest) (*SetTaskPriceResponse, error)
 	mustEmbedUnimplementedRaketaServiceServer()
 }
@@ -175,8 +175,8 @@ func (UnimplementedRaketaServiceServer) AssignUser(context.Context, *AssignUserR
 func (UnimplementedRaketaServiceServer) CloseTask(context.Context, *CloseTaskRequest) (*CloseTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CloseTask not implemented")
 }
-func (UnimplementedRaketaServiceServer) GetOpenTasks(context.Context, *GetOpenTasksRequest) (*GetOpenTasksResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOpenTasks not implemented")
+func (UnimplementedRaketaServiceServer) GetUnassignTasks(context.Context, *GetUnassignTasksRequest) (*GetUnassignTasksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUnassignTasks not implemented")
 }
 func (UnimplementedRaketaServiceServer) SetTaskPrice(context.Context, *SetTaskPriceRequest) (*SetTaskPriceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetTaskPrice not implemented")
@@ -320,20 +320,20 @@ func _RaketaService_CloseTask_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RaketaService_GetOpenTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOpenTasksRequest)
+func _RaketaService_GetUnassignTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUnassignTasksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RaketaServiceServer).GetOpenTasks(ctx, in)
+		return srv.(RaketaServiceServer).GetUnassignTasks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RaketaService_GetOpenTasks_FullMethodName,
+		FullMethod: RaketaService_GetUnassignTasks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaketaServiceServer).GetOpenTasks(ctx, req.(*GetOpenTasksRequest))
+		return srv.(RaketaServiceServer).GetUnassignTasks(ctx, req.(*GetUnassignTasksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -392,8 +392,8 @@ var RaketaService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RaketaService_CloseTask_Handler,
 		},
 		{
-			MethodName: "GetOpenTasks",
-			Handler:    _RaketaService_GetOpenTasks_Handler,
+			MethodName: "GetUnassignTasks",
+			Handler:    _RaketaService_GetUnassignTasks_Handler,
 		},
 		{
 			MethodName: "SetTaskPrice",

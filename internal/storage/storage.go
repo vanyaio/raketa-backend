@@ -30,7 +30,7 @@ func NewStorage(db pgxIface) *Storage {
 }
 
 func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
-	query := `INSERT INTO users (id, telegram_username) VALUES ($1, $2)`
+	query := `INSERT INTO users (id, telegram_username) VALUES ($1, COALESCE(NULLIF($2, ''), NULL))`
 	_, err := s.db.Exec(ctx, query, user.ID, user.Username)
 	if err != nil {
 		return err
@@ -85,8 +85,8 @@ func (s *Storage) CloseTask(ctx context.Context, req *types.CloseTaskRequest) er
 	return nil
 }
 
-func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
-	query := `SELECT * FROM tasks WHERE status = 'open'`
+func (s *Storage) GetUnassignTasks(ctx context.Context) ([]*types.Task, error) {
+	query := `SELECT * FROM tasks WHERE status = 'open' AND assigned_id IS NULL`
 	rows, err := s.db.Query(ctx, query)
 	if err != nil {
 		return nil, err
@@ -109,8 +109,8 @@ func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
 
 func (s *Storage) CheckUser(ctx context.Context, user *types.User) (bool, error) {
 	var exists bool
-	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1)`
-	_ = s.db.QueryRow(ctx, query, user.ID).Scan(&exists)
+	query := `SELECT EXISTS (SELECT * FROM users WHERE telegram_username = $1)`
+	_ = s.db.QueryRow(ctx, query, user.Username).Scan(&exists)
 	if !exists {
 		return false, errors.New("User doesn't exists")
 	}
