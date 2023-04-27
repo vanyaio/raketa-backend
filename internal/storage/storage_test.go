@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/suite"
+	"github.com/vanyaio/raketa-backend/config"
 	"github.com/vanyaio/raketa-backend/internal/types"
 	"github.com/vanyaio/raketa-backend/pkg/db"
 )
@@ -26,9 +27,11 @@ func TestRaketaTestSuit(t *testing.T) {
 }
 
 func (r *RaketaTestSuite) SetupSuite() {
+	config := config.GetConfig()
+
 	ctx := context.Background()
 
-	pool, err := db.NewPool(ctx)
+	pool, err := db.NewPool(ctx, config)
 	r.NoError(err)
 
 	storage := NewStorage(pool)

@@ -1,24 +1,21 @@
-build:
-	@go build -o ./bin/api
-
-run: build
-	@./bin/api 
-
-run-ports:
-	go run main.go -grpc-port=$(grpc-port) -rest-port=$(rest-port)
+run:
+	POSTGRES_HOST=localhost POSTGRES_DB=raketalocaldb go run main.go	
 
 postgres-up:
-	docker run --name raketadb \
+	docker run --name raketalocaldb \
 	-e POSTGRES_HOST=localhost \
 	-e POSTGRES_PASSWORD=postgres \
 	-e POSTGRES_USER=postgres \
-	-e POSTGRES_DB=raketadb \
-	-p 5432:5432 -d postgres
+	-e POSTGRES_DB=raketalocaldb \
+	-p 5436:5432 -d postgres
 
-postgres-start:
-	docker start raketadb
+postgres-local-start:
+	docker start raketalocaldb
 
-postgres-run: postgres-start
+postgres-local-run: postgres-local-start
+	docker exec -it raketalocaldb psql -U postgres raketalocaldb
+
+postgres-run:
 	docker exec -it raketadb psql -U postgres raketadb
 
 postgres-stop:
@@ -40,10 +37,10 @@ migrate-create:
 	migrate create -ext sql -dir ./migrations -seq raketadb
 
 migrate-up:
-	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketadb?sslmode=disable" up
+	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketalocaldb?sslmode=disable" up
 
 migrate-down:
-	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketadb?sslmode=disable" down ${version}
+	migrate -path ./migrations -database "postgres://postgres:postgres@localhost:5432/raketalocaldb?sslmode=disable" down ${version}
 
 # docker-migrations
 docker-migrate-down:

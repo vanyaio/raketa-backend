@@ -4,9 +4,11 @@ WORKDIR /app
 
 COPY ./ /app/
 
-ENV PATH="$PATH:/usr/local/bin"
-ENV GRPC_PORT=:50052
-ENV REST_PORT=:9090
+ENV PATH="$PATH:/usr/local/bin" \
+    GRPC_PORT=:50052 \
+    REST_PORT=:9090 \
+    POSTGRES_HOST=raketadb \
+    POSTGRES_DB=rakteabd
 # install psql
 RUN apt-get update
 RUN apt-get -y install postgresql-client

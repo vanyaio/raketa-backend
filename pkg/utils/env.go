@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func GetEnvValue(key string) (string, error) {
+func CheckAdminRole(key string) (string, error) {
 	err := godotenv.Load(".env")
 
 	if err != nil {
