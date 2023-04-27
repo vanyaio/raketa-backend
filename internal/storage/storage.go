@@ -85,8 +85,8 @@ func (s *Storage) CloseTask(ctx context.Context, req *types.CloseTaskRequest) er
 	return nil
 }
 
-func (s *Storage) GetOpenTasks(ctx context.Context) ([]*types.Task, error) {
-	query := `SELECT * FROM tasks WHERE status = 'open'`
+func (s *Storage) GetUnassignTasks(ctx context.Context) ([]*types.Task, error) {
+	query := `SELECT * FROM tasks WHERE status = 'open' AND assigned_id IS NULL`
 	rows, err := s.db.Query(ctx, query)
 	if err != nil {
 		return nil, err

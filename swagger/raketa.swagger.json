@@ -110,28 +110,6 @@
         ]
       }
     },
-    "/tasks/open": {
-      "get": {
-        "operationId": "RaketaService_GetOpenTasks",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/raketaGetOpenTasksResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "RaketaService"
-        ]
-      }
-    },
     "/tasks/price": {
       "patch": {
         "operationId": "RaketaService_SetTaskPrice",
@@ -159,6 +137,28 @@
             }
           }
         ],
+        "tags": [
+          "RaketaService"
+        ]
+      }
+    },
+    "/tasks/unassign": {
+      "get": {
+        "operationId": "RaketaService_GetUnassignTasks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/raketaGetUnassignTasksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
         "tags": [
           "RaketaService"
         ]
@@ -368,7 +368,7 @@
     "raketaDeleteTaskResponse": {
       "type": "object"
     },
-    "raketaGetOpenTasksResponse": {
+    "raketaGetUnassignTasksResponse": {
       "type": "object",
       "properties": {
         "tasks": {

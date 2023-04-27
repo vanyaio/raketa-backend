@@ -19,7 +19,7 @@ type storage interface {
 	DeleteTask(ctx context.Context, task *types.Task) error
 	AssignUser(ctx context.Context, req *types.AssignUserRequest) error
 	CloseTask(ctx context.Context, req *types.CloseTaskRequest) error
-	GetOpenTasks(ctx context.Context) ([]*types.Task, error)
+	GetUnassignTasks(ctx context.Context) ([]*types.Task, error)
 	CheckUser(ctx context.Context, user *types.User) (bool, error)
 	SetTaskPrice(ctx context.Context, req *types.SetTaskPriceRequest) error
 	GetUserStats(ctx context.Context, user *types.User) (int64, error)
@@ -91,13 +91,13 @@ func (s *Service) CloseTask(ctx context.Context, req *proto.CloseTaskRequest) (*
 	return &proto.CloseTaskResponse{}, nil
 }
 
-func (s *Service) GetOpenTasks(ctx context.Context, req *proto.GetOpenTasksRequest) (*proto.GetOpenTasksResponse, error) {
-	tasks, err := s.storage.GetOpenTasks(ctx)
+func (s *Service) GetUnassignTasks(ctx context.Context, req *proto.GetUnassignTasksRequest) (*proto.GetUnassignTasksResponse, error) {
+	tasks, err := s.storage.GetUnassignTasks(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &proto.GetOpenTasksResponse{
+	return &proto.GetUnassignTasksResponse{
 		Tasks: convertTasksToProto(tasks),
 	}, nil
 }

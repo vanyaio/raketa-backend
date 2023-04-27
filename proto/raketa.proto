@@ -46,9 +46,9 @@ service RaketaService {
             body: "*"
         };
     };
-    rpc GetOpenTasks(GetOpenTasksRequest) returns (GetOpenTasksResponse) {
+    rpc GetUnassignTasks(GetUnassignTasksRequest) returns (GetUnassignTasksResponse) {
         option (google.api.http) = {
-            get: "/tasks/open"
+            get: "/tasks/unassign"
         };
     };
     rpc SetTaskPrice(SetTaskPriceRequest) returns (SetTaskPriceResponse) {
@@ -112,9 +112,9 @@ message CloseTaskRequest {
 
 message CloseTaskResponse {}
 
-message GetOpenTasksRequest {}
+message GetUnassignTasksRequest {}
 
-message GetOpenTasksResponse {
+message GetUnassignTasksResponse {
     repeated Task tasks = 1;
 }
 

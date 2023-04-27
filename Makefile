@@ -15,6 +15,13 @@ postgres-local-start:
 postgres-local-run: postgres-local-start
 	docker exec -it raketalocaldb psql -U postgres raketalocaldb
 
+postgres-local-stop:
+	docker stop raketalocaldb
+
+postgres-local-del: postgres-stop
+	docker rm raketalocaldb
+
+
 postgres-run:
 	docker exec -it raketadb psql -U postgres raketadb
 

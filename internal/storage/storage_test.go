@@ -199,13 +199,30 @@ func (r *RaketaTestSuite) Test_CloseTask() {
 	r.NoError(err)
 }
 
-func (r *RaketaTestSuite) Test_GetOpenTasks() {
+func (r *RaketaTestSuite) Test_GetUnassignTasks() {
+	u := &types.User{
+		ID:       int64(randomId()),
+		Username: randomURL(),
+	}
+
+	err := r.storage.CreateUser(r.ctx, u)
+	r.NoError(err)
+
+
 	taskOpen1 := &types.Task{
 		Url:    randomURL() + fmt.Sprintf("%d", randomId()),
 		Status: types.Open,
 	}
 
-	err := r.storage.CreateTask(r.ctx, taskOpen1)
+	err = r.storage.CreateTask(r.ctx, taskOpen1)
+	r.NoError(err)
+
+	req := &types.AssignUserRequest{
+		Url:      taskOpen1.Url,
+		Username: u.Username,
+	}
+
+	err = r.storage.AssignUser(r.ctx, req)
 	r.NoError(err)
 
 	taskOpen2 := &types.Task{
@@ -224,9 +241,9 @@ func (r *RaketaTestSuite) Test_GetOpenTasks() {
 	err = r.storage.CreateTask(r.ctx, taskClosed)
 	r.NoError(err)
 
-	tasks, err := r.storage.GetOpenTasks(r.ctx)
+	tasks, err := r.storage.GetUnassignTasks(r.ctx)
 	r.NoError(err)
-	r.Contains(tasks, taskOpen1)
+	r.NotContains(tasks, taskOpen1)
 	r.Contains(tasks, taskOpen2)
 	r.NotContains(tasks, taskClosed)
 }
