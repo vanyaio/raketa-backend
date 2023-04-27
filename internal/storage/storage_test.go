@@ -58,22 +58,42 @@ func (r *RaketaTestSuite) TearDownTest() {
 }
 
 func (r *RaketaTestSuite) Test_CreateUser() {
-	u := &types.User{
-		ID:       int64(randomId()),
-		Username: randomURL(),
-	}
+	r.Run("username exists", func() {
+		u := &types.User{
+			ID:       int64(randomId()),
+			Username: randomURL(),
+		}
+	
+		err := r.storage.CreateUser(r.ctx, u)
+		r.NoError(err)
+	
+		var exists bool
+		query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username = $2)`
+		err = r.db.QueryRow(r.ctx, query, u.ID, u.Username).Scan(&exists)
+		if err != nil {
+			r.Error(err)
+		}
+		r.True(exists)
+		r.NoError(err)
+	})
 
-	err := r.storage.CreateUser(r.ctx, u)
-	r.NoError(err)
-
-	var exists bool
-	query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username = $2)`
-	err = r.db.QueryRow(r.ctx, query, u.ID, u.Username).Scan(&exists)
-	if err != nil {
-		r.Error(err)
-	}
-	r.True(exists)
-	r.NoError(err)
+	r.Run("username doesn't exist", func() {
+		u := &types.User{
+			ID:       int64(randomId()),
+		}
+	
+		err := r.storage.CreateUser(r.ctx, u)
+		r.NoError(err)
+	
+		var exists bool
+		query := `SELECT EXISTS (SELECT * FROM users WHERE id = $1 AND telegram_username IS NULL)`
+		err = r.db.QueryRow(r.ctx, query, u.ID).Scan(&exists)
+		if err != nil {
+			r.Error(err)
+		}
+		r.True(exists)
+		r.NoError(err)
+	})
 }
 
 func (r *RaketaTestSuite) Test_CreateTask() {

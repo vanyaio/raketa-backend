@@ -30,7 +30,7 @@ func NewStorage(db pgxIface) *Storage {
 }
 
 func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
-	query := `INSERT INTO users (id, telegram_username) VALUES ($1, $2)`
+	query := `INSERT INTO users (id, telegram_username) VALUES ($1, COALESCE(NULLIF($2, ''), NULL))`
 	_, err := s.db.Exec(ctx, query, user.ID, user.Username)
 	if err != nil {
 		return err
