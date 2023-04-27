@@ -8,7 +8,7 @@ ENV PATH="$PATH:/usr/local/bin" \
     GRPC_PORT=:50052 \
     REST_PORT=:9090 \
     POSTGRES_HOST=raketadb \
-    POSTGRES_DB=rakteabd
+    POSTGRES_DB=raketadb
 # install psql
 RUN apt-get update
 RUN apt-get -y install postgresql-client
